@@ -1,0 +1,221 @@
+% ======================================================================
+%  UPPGIFT 6: LAGA JULGRANSBELYSNING
+% ======================================================================
+\section{6 Julgransbelysning}
+
+\uppgiftsbild{6}{Laga julgransbelysning}
+{analysera en algoritm \emph{exakt} och bevisa en matchande undre gräns för problemet.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Kostnadsmåttet: lampbyten, inte tester och inte tid.
+  \item Algoritmens värsta fall mot problemets undre gräns.
+  \item Exakt antal, $2n-1$, inte bara $\Theta(n)$.
+\end{itemize}}
+
+\begin{frame}{Uppgift 6: Laga julgransbelysning}
+\begin{infobox}[fontupper=\footnotesize]
+Jonas julgransbelysning med $n$ seriellt kopplade lampor lyser inte. Det räcker att en lampa är
+trasig för att belysningen inte ska lysa. Han har $n$ nya lampor som säkert fungerar, men vill
+inte ersätta några hela lampor med nya. En urskruvning följd av en iskruvning tar tiden 1.
+Konstruera en algoritm, analysera värstafallet \emph{exakt} och ge en matchande undre gräns.
+\end{infobox}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\centering
+\input{gen/lamp-start}
+\end{column}
+\begin{column}{0.42\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{Kostar 1:} ett byte (ur + i).
+  \item \textbf{Gratis:} att titta om det lyser.
+  \item \textbf{Förbjudet:} att ersätta en hel gammal lampa.
+\end{itemize}
+\end{column}
+\end{columns}
+\varstrip{Separation}{problemet}{kostnadsmåttet}{att vi räknar byten, inte tester}
+\end{frame}
+
+\begin{frame}{Viggos algoritm}
+\begin{columns}[T]
+\begin{column}{0.56\textwidth}
+\footnotesize
+\begin{algorithmic}[1]
+\State byt alla lampor utom den på plats 1 mot nya
+\State lägg de gamla lamporna i en säck
+\State $i\gets1$
+\While{det finns lampor i säcken}
+  \If{belysningen lyser}
+    \State $i\gets i+1$
+    \State skruva ur den nya lampan på plats $i$
+  \Else
+    \State skruva ur den gamla trasiga lampan på plats $i$
+  \EndIf
+  \State ta en lampa ur säcken och skruva i den på plats $i$
+\EndWhile
+\If{belysningen inte lyser}
+  \State byt lampan på plats $i$ mot en ny
+\EndIf
+\end{algorithmic}
+\end{column}
+\begin{column}{0.41\textwidth}
+\begin{infobox}[fontupper=\footnotesize]
+\textbf{Invariant} (i början av varje varv): platserna före $i$ har gamla, hela lampor;
+plats $i$ har en gammal lampa; platserna efter $i$ har nya.
+\end{infobox}
+\begin{ahabox}[fontupper=\footnotesize]
+Idén: när alla andra lampor är kända och hela avslöjar belysningen exakt en lampa. Alla
+gamla lampor provas en i taget, på samma sätt.
+\end{ahabox}
+\end{column}
+\end{columns}
+\end{frame}
+
+\input{gen/lamp-walk}
+
+\begin{frame}{Exakt analys: det är sista lampan som avgör}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\small
+\[
+  \underbrace{(n-1)}_{\text{byt till nya}}\;+\;\underbrace{(n-1)}_{\text{prova säcken}}
+  \;+\;\underbrace{[\,o_n\text{ trasig}\,]}_{\text{sista bytet}}
+\]
+Säcken ger alltid $n-1$ byten. Sista bytet behövs bara om den sista lampan ur säcken är trasig.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Värsta fallet: $2n-1$.
+  \item Bästa fallet: $2n-2$.
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}lc@{}}
+\toprule
+Trasiga ($n=5$) & Byten\\
+\midrule
+$o_2$, $o_5$ (exemplet) & 9\\
+bara $o_5$ & \textbf{9}\\
+alla fem & 9\\
+bara $o_1$ & 8\\
+bara $o_2$ & 8\\
+$o_1,\dots,o_4$ & 8\\
+\bottomrule
+\end{tabular}
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}[fontupper=\footnotesize]
+”Värsta fallet är när alla lampor är trasiga.” Det är \emph{ett} värsta fall. Det räcker att den
+sista lampan i säcken är trasig.
+\end{missbox}
+\varstrip{Separation}{algoritmen}{vilka lampor som är trasiga}{att bara $o_n$ påverkar kostnaden}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Mörkret i början är gratis information}
+\small
+Belysningen lyste inte från början. Alltså är minst en lampa trasig.
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Har $o_1,\dots,o_{n-1}$ alla visat sig hela vet vi att $o_n$ är trasig — utan att prova.
+        Låt den nya lampan sitta kvar.
+  \item På just det indatat kostar det $2n-3$ i stället för $2n-1$.
+  \item Värsta fallet blir inte bättre: med $o_{n-1}$ och $o_n$ trasiga kostar det fortfarande
+        $2n-1$.
+\end{itemize}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Det kan det inte heller bli. Att optimera bort det ena värsta fallet flyttar det bara till ett annat.
+Det är vad en undre gräns betyder i praktiken.
+\end{kaninbox}
+\varstrip{Kontrast}{problemet}{algoritmen: med eller utan knepet}{att bästa fallet kan förbättras, värsta inte}
+\end{frame}}
+
+\begin{frame}{Undre gräns: motståndaren}
+\small
+Påstående: \emph{varje} algoritm behöver $2n-1$ byten i värsta fallet. Viggos motståndare:
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item En lampa avslöjas bara när alla \emph{andra} lampor i belysningen är kända och hela.
+  \item Motståndaren låter belysningen vara mörk tills $n-1$ nya lampor sitter i: den sista
+        originallampan är trasig. ($n-1$ byten.)
+  \item De $n-1$ bortskruvade lamporna har inte avslöjat något. Var och en måste in igen.
+        ($n-1$ byten till.)
+  \item Den sist provade är också trasig. (1 byte.)
+\end{enumerate}
+Summa $2n-1$, med bara två trasiga lampor.
+\vfill
+\begin{missbox}[fontupper=\footnotesize]
+”Undre gräns för algoritmen” (rubrik i en äldre bild). Argumentet gäller varje algoritm: det är en
+undre gräns för \emph{problemet}. För bara Viggos algoritm räcker ett indata: $o_n$ trasig.
+\end{missbox}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Ett stramare bevis: två indata som ser likadana ut}
+\small
+Kör en godtycklig algoritm på $X$: \emph{alla} lampor trasiga. Jämför med $X_j$: bara $o_j$ hel.
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Observationerna skiljer sig bara i läget $S_j$: $o_j$ sitter i och alla andra platser har
+        nya lampor. (Då lyser $X_j$, men inte $X$.)
+  \item Slutlägena måste skilja sig: $o_j$ ska sitta kvar i $X_j$ men inte i $X$. Körningen på $X$
+        måste alltså passera \emph{alla} $S_1,\dots,S_n$.
+  \item Minst $n-1$ byten till det första $S_j$. Minst 1 byte mellan två olika $S_j$: $n-1$ gånger.
+        Minst 1 byte till slutläget.
+\end{itemize}
+\[
+  (n-1)+(n-1)+1=2n-1\quad\text{byten för varje algoritm, på indatat }X.
+\]
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Viggos algoritm går $S_1\to S_2\to\dots\to S_n$ med ett byte i taget på $X$. Den kan inte göras bättre.
+\end{kaninbox}
+\end{frame}}
+
+\begin{frame}{Samma idé i uppgift 5 och 6}
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+& \textbf{Uppgift 5: sökning} & \textbf{Uppgift 6: lampor}\\
+\midrule
+Kostnad & jämförelser & byten (testerna är gratis)\\
+Observation & $<$, $=$ eller $>$ & lyser eller lyser inte\\
+Motståndaren håller & den större halvan av utfallen & mörkret så länge som möjligt\\
+Undre gräns & $\lceil\log_2(n+1)\rceil$ & $2n-1$\\
+Når gränsen & binärsökning & Viggos algoritm\\
+\bottomrule
+\end{tabularx}
+\smallskip
+
+\small En motståndare väljer den dyraste stigen genom algoritmens beslutsträd.
+\vfill
+\begin{missbox}[fontupper=\footnotesize]
+”Binärsök efter den trasiga lampan: $O(\log n)$.” Det sparar \emph{tester}, som är gratis.
+Bytena kostar: minst $2n-1$, oavsett metod.
+\end{missbox}
+\varstrip{Fusion}{bevisidén}{problem, kostnadsmått och observationer samtidigt}{motståndare = värsta stigen}
+\end{frame}
+
+\begin{frame}{Vanliga fel i uppgift 6}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”$\Theta(n)$.” Uppgiften vill ha exakt antal: $2n-1$. Ordoklass räcker inte när skillnaden
+mellan $2n-1$ och $2n-2$ är poängen.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Byt alla mot nya: $n$ byten.” Hela gamla lampor får inte ersättas.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Min algoritm tar $2n-1$, alltså är det en undre gräns.” Det är algoritmens värsta fall.
+Problemets undre gräns kräver ett argument för alla algoritmer.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Värsta fallet: alla trasiga.” Ett av flera. För Viggos algoritm räcker $o_n$.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{uppgiften}{analysen, rätt och nästan rätt}{exakt, tillåtet, algoritm eller problem}
+\end{frame}

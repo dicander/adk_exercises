@@ -1,0 +1,390 @@
+% ======================================================================
+%  UPPGIFT 3: EULERCYKEL
+% ======================================================================
+\section{3 Eulercykel}
+
+\uppgiftsbild{3}{Eulercykel}
+{hitta en Eulercykel i linjär tid — och kunna säga vad ”linjär” betyder här.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Varje \emph{kant} exakt en gång. (Varje \emph{hörn} en gång är ett helt annat problem.)
+  \item Varför jämnt gradtal räcker: man kan bara fastna där man började.
+  \item Linjärt i $|V|+|E|$ kräver rätt datastruktur: delade kanter och en pekare per hörn.
+\end{itemize}}
+
+\begin{frame}{Uppgift 3: Eulercykel}
+\begin{infobox}
+Givet en oriktad sammanhängande graf $G=\langle V,E\rangle$ där alla hörn har jämnt gradtal.
+Hitta en Eulercykel, dvs.\ en sluten stig som passerar varje kant i $E$ exakt en gång.
+Algoritmen ska gå i linjär tid.
+\end{infobox}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+\input{gen/euler-graf}\par
+{\scriptsize\color{kthorange}gradtal i orange}
+\end{column}
+\begin{column}{0.47\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Hörn får upprepas: här måste 1 och 3 passeras två gånger var.
+  \item Villkoren är nödvändiga: varje gång cykeln går \emph{in} i ett hörn går den också
+        \emph{ut}, så gradtalen blir jämna.
+  \item Att de också är tillräckliga visar algoritmen.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Euler eller Hamilton? Ett ord skiljer}
+\begin{columns}[T]
+\begin{column}{0.3\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Fluga}\par\smallskip
+\begin{tikzpicture}[scale=0.85]
+  \node[gv] (m) at (0,0) {}; \node[gv] (a) at (-1.3,0.85) {}; \node[gv] (b) at (-1.3,-0.85) {};
+  \node[gv] (c) at (1.3,0.85) {}; \node[gv] (d) at (1.3,-0.85) {};
+  \draw[ge] (m)--(a)--(b)--(m)--(c)--(d)--(m);
+\end{tikzpicture}\par\smallskip
+\footnotesize Euler: \ja\quad Hamilton: \nej\\ Mitten måste passeras två gånger.
+\end{column}
+\begin{column}{0.3\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}$K_4$}\par\smallskip
+\begin{tikzpicture}[scale=0.85]
+  \node[gv] (a) at (0,0) {}; \node[gv] (b) at (1.7,0) {};
+  \node[gv] (c) at (1.7,1.7) {}; \node[gv] (d) at (0,1.7) {};
+  \draw[ge] (a)--(b)--(c)--(d)--(a)--(c) (b)--(d);
+\end{tikzpicture}\par\smallskip
+\footnotesize Euler: \nej\quad Hamilton: \ja\\ Alla gradtal är 3.
+\end{column}
+\begin{column}{0.36\textwidth}
+\small
+\textbf{Euler:} varje \emph{kant} exakt en gång. Linjär tid.\par\smallskip
+\textbf{Hamilton:} varje \emph{hörn} exakt en gång. NP-fullständigt.\par\medskip
+Nästan samma mening. Helt olika problem.
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”En Eulercykel besöker alla hörn en gång.” Det är en Hamiltoncykel — och för den finns
+ingen känd polynomisk algoritm.
+\end{missbox}
+\varstrip{Kontrast}{”besök allt exakt en gång”}{kanter eller hörn}{vad ordet ”varje” syftar på}
+\end{frame}
+
+\begin{frame}{Idén: en hare och en sköldpadda}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{infobox}[title={\textbf{Haren} (Viggos \textsc{PathFinder})},coltitle=white,colbacktitle=kthorange,
+  colframe=kthorange,fonttitle=\small,toptitle=1pt,bottomtitle=1pt]
+Springer från ett hörn $u$ längs omärkta kanter, märker dem och stannar först när den är
+tillbaka i $u$. Jämna gradtal gör att den bara kan fastna där.
+\end{infobox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{infobox}[title={\textbf{Sköldpaddan} (Viggos \textsc{Straggler})},coltitle=white,colbacktitle=kthgreen,
+  colframe=kthgreen,fonttitle=\small,toptitle=1pt,bottomtitle=1pt]
+Går efter längs harens stig och skriver ut hörnen. Har ett hörn omärkta kanter kvar skickar
+den ut haren därifrån — och går den nya turen \emph{innan} den fortsätter.
+\end{infobox}
+\end{column}
+\end{columns}
+\medskip
+\small
+Varje tur är en sluten stig. Sköldpaddan skarvar in turerna i varandra, precis där de börjar.
+Ingen kant springs två gånger av haren, och ingen kant gås två gånger av sköldpaddan.
+\medskip
+\begin{ahabox}
+Därför linjärt: varje kant märks en gång av haren och passeras en gång av sköldpaddan.
+(Förutsatt att båda hittar nästa omärkta kant i konstant tid — mer om det strax.)
+\end{ahabox}
+\end{frame}
+
+\begin{frame}{Pseudokod}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+{\small\bfseries\color{kthnavy}EulerCykel$(G)$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $\mathit{cykel}\gets[v_0]$
+\State välj en kant $(v_0,t)$ och märk den
+\State \textsc{Sköldpadda}(\textsc{Hare}$(v_0,t)$)
+\State \Return $\mathit{cykel}$
+\end{algorithmic}
+\medskip
+{\small\bfseries\color{kthorange}Hare$(\mathit{start},\mathit{cur})$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $\mathit{stig}\gets[\mathit{cur}]$
+\While{$\mathit{cur}\neq\mathit{start}$}
+  \State välj en omärkt kant $(\mathit{cur},v)$; märk den
+  \State lägg $v$ sist i $\mathit{stig}$;\ $\mathit{cur}\gets v$
+\EndWhile
+\State \Return $\mathit{stig}$
+\end{algorithmic}
+\end{column}
+\begin{column}{0.47\textwidth}
+{\small\bfseries\color{kthgreen}Sköldpadda$(\mathit{stig})$}
+\footnotesize
+\begin{algorithmic}[1]
+\ForAll{$u$ i $\mathit{stig}$, i ordning}
+  \State lägg $u$ sist i $\mathit{cykel}$
+  \ForAll{kanter $(u,v)$}
+    \If{$(u,v)$ är omärkt}
+      \State märk $(u,v)$
+      \State \textsc{Sköldpadda}(\textsc{Hare}$(u,v)$)
+    \EndIf
+  \EndFor
+\EndFor
+\end{algorithmic}
+\medskip
+\begin{infobox}[fontupper=\footnotesize]
+Omärkt-testet görs om för varje kant: det rekursiva anropet kan ha märkt kanter som slingan
+ännu inte kommit till.
+\end{infobox}
+\end{column}
+\end{columns}
+\end{frame}
+
+\input{gen/euler-walk}
+
+{\kaninbg
+\begin{frame}{\kh Varför fastnar haren bara i starthörnet?}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Varje gång haren kommer \emph{in} i ett hörn $w\neq u$ har den använt ett udda antal
+        av $w$:s kanter (in, ut, in, ut, \dots, in).
+  \item $\deg(w)$ är jämnt, så minst en kant är omärkt. Haren kommer alltid vidare.
+  \item I $u$ är det tvärtom: den första kanten gick \emph{ut}, så efter varje ankomst är ett
+        jämnt antal använt. Där kan den fastna.
+  \item En sluten tur tar bort ett jämnt antal kanter från varje hörn. Alla gradtal är
+        fortfarande jämna, och argumentet gäller nästa tur också.
+\end{itemize}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Och varför kommer alla kanter med?} Anta att en kant blev omärkt. Grafen är
+sammanhängande, så någon omärkt kant sitter i ett hörn som finns i cykeln. Men sköldpaddan
+kontrollerade varje hörn i cykeln. Motsägelse.
+\end{kaninbox}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Udda gradtal:} har exakt två hörn udda grad finns en Eulerväg mellan dem. Lägg till
+en extra kant mellan dem, hitta en cykel, ta bort kanten.
+\end{kaninbox}
+\end{column}
+\end{columns}
+\end{frame}}
+
+\begin{frame}{Linjär i vad? Tre detaljer som avgör}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\footnotesize
+\textbf{Indata:} grannlistor, $|V|+|E|$. \textbf{Utdata:} $|E|+1$ hörn, så $\Omega(|E|)$ krävs ändå.
+\begin{enumerate}\setlength{\itemsep}{2pt}
+  \item \textbf{En kant, två listor.} $\{u,v\}$ står i både $u$:s och $v$:s lista. Lagra kanten
+        en gång, med markeringen; båda listorna pekar på den.
+  \item \textbf{En pekare per hörn} till nästa ej undersökta plats i listan. Utan den börjar
+        haren och sköldpaddan om från början varje gång.
+  \item Med båda: varje listplats passeras ett konstant antal gånger. $O(|V|+|E|)$.
+\end{enumerate}
+\end{column}
+\begin{column}{0.37\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.62]
+  \node[gv,fill=lampyellow!50] (c) at (0,0) {$c$};
+  \foreach \a [count=\i] in {45,135,225,315} {
+    \node[gv,minimum size=3.5mm] (x\i) at (\a-22:1.7) {};
+    \node[gv,minimum size=3.5mm] (y\i) at (\a+22:1.7) {};
+    \draw[ge] (c)--(x\i)--(y\i)--(c);
+  }
+\end{tikzpicture}\par
+\footnotesize Blomma med $k$ blad: $\deg(c)=2k$, och cykeln passerar $c$ $k$ gånger.
+Utan pekare: $k\cdot2k=\Theta(|E|^2)$.
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}[fontupper=\footnotesize]
+”Eulercykeln hittas i $O(n)$.” Med $n=|V|$ är det omöjligt: $K_{101}$ har 101 hörn och
+5\,050 kanter, och alla ska med i cykeln.
+\end{missbox}
+\varstrip{Separation}{algoritmen}{datastrukturen: delade kanter, pekare}{att ”linjär” kräver rätt representation}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Utan rekursion: Hierholzer med stack}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+{\small\bfseries\color{kthnavy}Hierholzer$(G,v_0)$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $S\gets[v_0]$;\ $\mathit{cykel}\gets[\,]$
+\While{$S\neq\emptyset$}
+  \State $u\gets$ översta elementet i $S$
+  \If{$u$ har en omärkt kant $(u,v)$} \Comment{pekaren}
+    \State märk $(u,v)$;\ lägg $v$ överst i $S$
+  \Else
+    \State ta bort $u$ ur $S$;\ lägg $u$ sist i $\mathit{cykel}$
+  \EndIf
+\EndWhile
+\State \Return $\mathit{cykel}$
+\end{algorithmic}
+\end{column}
+\begin{column}{0.45\textwidth}
+\small
+Stacken är harens stig. När haren fastnar backar vi och skriver ut hörnen.\par\medskip
+På exemplet: $[1,5,4,1,3,7,6,3,2,1]$ — samma cykel som förut, baklänges. En Eulercykel
+baklänges är också en Eulercykel.
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Varför bry sig?} Rekursionen i hare/sköldpadda kan bli $\Theta(|E|)$ djup. Med en
+miljon kanter tar anropsstacken slut i Java och Python långt innan tiden gör det.
+\end{kaninbox}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Kontrast: Fleury (1883).} Gå aldrig över en bro (en kant vars borttagning delar grafen)
+om det finns ett annat val. Korrekt, men varje steg kräver en brokontroll: $O(|E|^2)$.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Königsberg 1736: där allt började}
+\begin{columns}[T]
+\begin{column}{0.42\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \node[gv] (A) at (0,0) {$A$};   \node[gv] (B) at (0,1.9) {$B$};
+  \node[gv] (C) at (0,-1.9) {$C$}; \node[gv] (D) at (2.7,0) {$D$};
+  \draw[ge] (A) to[bend left=22] (B);  \draw[ge] (A) to[bend right=22] (B);
+  \draw[ge] (A) to[bend left=22] (C);  \draw[ge] (A) to[bend right=22] (C);
+  \draw[ge] (A) -- (D); \draw[ge] (B) -- (D); \draw[ge] (C) -- (D);
+  \foreach \v/\d/\p in {A/5/left,B/3/left,C/3/left,D/3/right}
+    \node[font=\scriptsize,text=kthorange,\p=4pt of \v] {\d};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.55\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Fyra landområden, sju broar. Går det att promenera över varje bro exakt en gång?
+  \item Euler: nej. Alla fyra hörnen har udda grad (5, 3, 3, 3). För en cykel får inget ha
+        udda grad, för en väg högst två.
+  \item Eulers observation räknas som grafteorins första sats. Han bevisade bara att villkoret
+        är nödvändigt. Att det räcker visades senare (Hierholzer, 1873).
+\end{itemize}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+$A$ är ön Kneiphof, $B$ och $C$ flodstränderna, $D$ området öster om ön. Euler behövde aldrig
+promenera: det räckte att räkna gradtal.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Kodlåset: Eulercykler i riktade grafer}
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.85,every node/.style={font=\small},
+  lab/.style={font=\scriptsize,fill=white,inner sep=0.8pt}]
+  \node[gv,minimum size=7mm] (00) at (0,0) {00};
+  \node[gv,minimum size=7mm] (01) at (1.8,1.1) {01};
+  \node[gv,minimum size=7mm] (10) at (1.8,-1.1) {10};
+  \node[gv,minimum size=7mm] (11) at (3.6,0) {11};
+  \draw[->,ge] (00) to[out=150,in=210,looseness=5] node[lab,left] {000} (00);
+  \draw[->,ge] (00) -- node[lab] {001} (01);
+  \draw[->,ge] (01) to[bend left=18] node[lab,right] {010} (10);
+  \draw[->,ge] (10) to[bend left=18] node[lab,left] {101} (01);
+  \draw[->,ge] (01) -- node[lab] {011} (11);
+  \draw[->,ge] (11) to[out=30,in=-30,looseness=5] node[lab,right] {111} (11);
+  \draw[->,ge] (11) -- node[lab] {110} (10);
+  \draw[->,ge] (10) -- node[lab] {100} (00);
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.52\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Ett kodlås öppnas så fort de fyra senaste tryckningarna är rätt. Hur många tryck
+        krävs för att pröva alla $10^4$ koder?
+  \item Hörn: tre siffror. Kant: en fjärde. Ingrad = utgrad = 10 överallt, så en riktad
+        Eulercykel finns.
+  \item Svar: $10^4+3=10\,003$ tryck i stället för $40\,000$.
+  \item Binärt, tre siffror (bilden): $0001011100$ innehåller alla åtta.
+\end{itemize}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Samma algoritm, riktade grafer: de Bruijn-följder. (Kodlås borde alltså kräva Enter.)
+\end{kaninbox}
+\varstrip{Generalisering}{algoritmen}{grafen: oriktad eller riktad}{att villkoret är ”lika mycket in som ut”}
+\end{frame}}
+
+\begin{frame}{Båda villkoren behövs}
+\begin{columns}[T]
+\begin{column}{0.31\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Jämna grader, två delar}\par\smallskip
+\begin{tikzpicture}[scale=0.9]
+  \node[gv] (a) at (0,0) {}; \node[gv] (b) at (1.1,0) {}; \node[gv] (c) at (0.55,0.95) {};
+  \node[gv] (d) at (1.9,0) {}; \node[gv] (e) at (3.0,0) {}; \node[gv] (f) at (2.45,0.95) {};
+  \draw[ge] (a)--(b)--(c)--(a) (d)--(e)--(f)--(d);
+\end{tikzpicture}\par\medskip
+\footnotesize Ingen Eulercykel.
+\end{column}
+\begin{column}{0.31\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Sammanhängande, två udda}\par\smallskip
+\begin{tikzpicture}[scale=0.8]
+  \node[gv,fill=coral!40] (A) at (0,0) {}; \node[gv,fill=coral!40] (B) at (1.6,0) {};
+  \node[gv] (C) at (0,1.5) {}; \node[gv] (D) at (1.6,1.5) {}; \node[gv] (E) at (0.8,2.4) {};
+  \draw[ge] (A)--(B)--(D)--(C)--(A)--(D) (B)--(C) (C)--(E)--(D);
+\end{tikzpicture}\par
+\footnotesize Nikolaus hus: Eulerväg mellan de röda, men ingen cykel.
+\end{column}
+\begin{column}{0.31\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Sammanhängande, jämna}\par\smallskip
+\begin{tikzpicture}[scale=0.8]
+  \node[gv] (m) at (0,0) {}; \node[gv] (a) at (-1.2,0.8) {}; \node[gv] (b) at (-1.2,-0.8) {};
+  \node[gv] (c) at (1.2,0.8) {}; \node[gv] (d) at (1.2,-0.8) {};
+  \draw[ge] (m)--(a)--(b)--(m)--(c)--(d)--(m);
+\end{tikzpicture}\par\medskip
+\footnotesize Eulercykel finns.
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Alla grader jämna räcker.” Två trianglar utan förbindelse har jämna grader och ingen
+Eulercykel. (Isolerade hörn gör däremot inget: de har inga kanter att passera.)
+\end{missbox}
+\varstrip{Separation}{frågan}{ett villkor i taget}{att både sammanhang och jämna grader behövs}
+\end{frame}
+
+\begin{frame}{Vanliga fel i uppgift 3}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Gå tills du fastnar, klart.” Första turen $1\to2\to3\to1$ tar 3 av 9 kanter. Man fastnar i
+starthörnet, inte när grafen är slut.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Märk kanten i $u$:s lista.” Den står i $v$:s lista också. Märks bara ena riktningen går
+kanten två gånger.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Hitta alla turer och lägg dem efter varandra.” Tur 2 börjar i 3 och tur 3 i 1. Varje tur
+måste skarvas in där den börjar, annars blir det ingen sammanhängande promenad.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Linjär tid: $O(|V|)$.” Svaret har $|E|+1$ hörn. Linjärt betyder $O(|V|+|E|)$ — och det kräver
+en pekare per hörn.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{uppgiften}{lösningsidén, rätt och nästan rätt}{fastna, skarva, märka, räkna}
+\end{frame}

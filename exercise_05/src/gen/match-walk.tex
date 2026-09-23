@@ -1,0 +1,210 @@
+\begin{frame}{Ford--Fulkerson (med BFS) på julklapparna}
+\centering
+\only<1>{%
+\begin{tikzpicture}[scale=0.95,pers/.style={rounded corners=3pt,draw=kthnavy,fill=white,line width=0.7pt,
+    minimum width=15mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  sak/.style={rounded corners=3pt,draw=kthblue,fill=kthlight,line width=0.7pt,
+    minimum width=21mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  me/.style={draw=black!30,line width=0.7pt},
+  mm/.style={draw=kthblue,line width=2.2pt},
+  mp/.style={->,draw=kthgrass,line width=2.4pt},
+  mb/.style={->,draw=kthorange,line width=2pt,dash pattern=on 4pt off 2pt}]
+\useasboundingbox (-0.4,-2.1) rectangle (9.2,2.1);
+  \node[fn] (s) at (0,0) {$s$};
+  \node[fn] (t) at (8.8,0) {$t$};
+  \node[pers] (Emma) at (2.3,1.65) {Emma};
+  \node[pers] (Elliot) at (2.3,0.55) {Elliot};
+  \node[pers] (Marcus) at (2.3,-0.55) {Marcus};
+  \node[pers] (Lovisa) at (2.3,-1.65) {Lovisa};
+  \node[sak] (RTX) at (6.5,1.65) {RTX 5090};
+  \node[sak] (PS5) at (6.5,0.55) {PS5 Pro};
+  \node[sak] (Xbox) at (6.5,-0.55) {Xbox Series X};
+  \node[sak] (Switch) at (6.5,-1.65) {Switch 2};
+  \draw[me] (Emma.east) -- (RTX.west);
+  \draw[me] (Emma.east) -- (PS5.west);
+  \draw[me] (Elliot.east) -- (RTX.west);
+  \draw[me] (Elliot.east) -- (Xbox.west);
+  \draw[me] (Marcus.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (PS5.west);
+  \draw[me] (Lovisa.east) -- (Switch.west);
+  \draw[fe] (s) -- (Emma.west);
+  \draw[fe] (s) -- (Elliot.west);
+  \draw[fe] (s) -- (Marcus.west);
+  \draw[fe] (s) -- (Lovisa.west);
+  \draw[fe] (RTX.east) -- (t);
+  \draw[fe] (PS5.east) -- (t);
+  \draw[fe] (Xbox.east) -- (t);
+  \draw[fe] (Switch.east) -- (t);
+  \draw[mp] (s) -- (Emma.west);
+  \draw[mp] (Emma.east) -- (RTX.west);
+  \draw[mp] (RTX.east) -- (t);
+\end{tikzpicture}}
+\only<2>{%
+\begin{tikzpicture}[scale=0.95,pers/.style={rounded corners=3pt,draw=kthnavy,fill=white,line width=0.7pt,
+    minimum width=15mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  sak/.style={rounded corners=3pt,draw=kthblue,fill=kthlight,line width=0.7pt,
+    minimum width=21mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  me/.style={draw=black!30,line width=0.7pt},
+  mm/.style={draw=kthblue,line width=2.2pt},
+  mp/.style={->,draw=kthgrass,line width=2.4pt},
+  mb/.style={->,draw=kthorange,line width=2pt,dash pattern=on 4pt off 2pt}]
+\useasboundingbox (-0.4,-2.1) rectangle (9.2,2.1);
+  \node[fn] (s) at (0,0) {$s$};
+  \node[fn] (t) at (8.8,0) {$t$};
+  \node[pers] (Emma) at (2.3,1.65) {Emma};
+  \node[pers] (Elliot) at (2.3,0.55) {Elliot};
+  \node[pers] (Marcus) at (2.3,-0.55) {Marcus};
+  \node[pers] (Lovisa) at (2.3,-1.65) {Lovisa};
+  \node[sak] (RTX) at (6.5,1.65) {RTX 5090};
+  \node[sak] (PS5) at (6.5,0.55) {PS5 Pro};
+  \node[sak] (Xbox) at (6.5,-0.55) {Xbox Series X};
+  \node[sak] (Switch) at (6.5,-1.65) {Switch 2};
+  \draw[me] (Emma.east) -- (PS5.west);
+  \draw[me] (Elliot.east) -- (RTX.west);
+  \draw[me] (Elliot.east) -- (Xbox.west);
+  \draw[me] (Marcus.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (PS5.west);
+  \draw[me] (Lovisa.east) -- (Switch.west);
+  \draw[mm,->] (s) -- (Emma.west);
+  \draw[fe] (s) -- (Elliot.west);
+  \draw[fe] (s) -- (Marcus.west);
+  \draw[fe] (s) -- (Lovisa.west);
+  \draw[mm,->] (RTX.east) -- (t);
+  \draw[fe] (PS5.east) -- (t);
+  \draw[fe] (Xbox.east) -- (t);
+  \draw[fe] (Switch.east) -- (t);
+  \draw[mm] (Emma.east) -- (RTX.west);
+  \draw[mp] (s) -- (Elliot.west);
+  \draw[mp] (Elliot.east) -- (Xbox.west);
+  \draw[mp] (Xbox.east) -- (t);
+\end{tikzpicture}}
+\only<3>{%
+\begin{tikzpicture}[scale=0.95,pers/.style={rounded corners=3pt,draw=kthnavy,fill=white,line width=0.7pt,
+    minimum width=15mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  sak/.style={rounded corners=3pt,draw=kthblue,fill=kthlight,line width=0.7pt,
+    minimum width=21mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  me/.style={draw=black!30,line width=0.7pt},
+  mm/.style={draw=kthblue,line width=2.2pt},
+  mp/.style={->,draw=kthgrass,line width=2.4pt},
+  mb/.style={->,draw=kthorange,line width=2pt,dash pattern=on 4pt off 2pt}]
+\useasboundingbox (-0.4,-2.1) rectangle (9.2,2.1);
+  \node[fn] (s) at (0,0) {$s$};
+  \node[fn] (t) at (8.8,0) {$t$};
+  \node[pers] (Emma) at (2.3,1.65) {Emma};
+  \node[pers] (Elliot) at (2.3,0.55) {Elliot};
+  \node[pers] (Marcus) at (2.3,-0.55) {Marcus};
+  \node[pers] (Lovisa) at (2.3,-1.65) {Lovisa};
+  \node[sak] (RTX) at (6.5,1.65) {RTX 5090};
+  \node[sak] (PS5) at (6.5,0.55) {PS5 Pro};
+  \node[sak] (Xbox) at (6.5,-0.55) {Xbox Series X};
+  \node[sak] (Switch) at (6.5,-1.65) {Switch 2};
+  \draw[me] (Emma.east) -- (PS5.west);
+  \draw[me] (Elliot.east) -- (RTX.west);
+  \draw[me] (Marcus.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (PS5.west);
+  \draw[me] (Lovisa.east) -- (Switch.west);
+  \draw[mm,->] (s) -- (Emma.west);
+  \draw[mm,->] (s) -- (Elliot.west);
+  \draw[fe] (s) -- (Marcus.west);
+  \draw[fe] (s) -- (Lovisa.west);
+  \draw[mm,->] (RTX.east) -- (t);
+  \draw[fe] (PS5.east) -- (t);
+  \draw[mm,->] (Xbox.east) -- (t);
+  \draw[fe] (Switch.east) -- (t);
+  \draw[mm] (Emma.east) -- (RTX.west);
+  \draw[mm] (Elliot.east) -- (Xbox.west);
+  \draw[mp] (s) -- (Lovisa.west);
+  \draw[mp] (Lovisa.east) -- (PS5.west);
+  \draw[mp] (PS5.east) -- (t);
+\end{tikzpicture}}
+\only<4>{%
+\begin{tikzpicture}[scale=0.95,pers/.style={rounded corners=3pt,draw=kthnavy,fill=white,line width=0.7pt,
+    minimum width=15mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  sak/.style={rounded corners=3pt,draw=kthblue,fill=kthlight,line width=0.7pt,
+    minimum width=21mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  me/.style={draw=black!30,line width=0.7pt},
+  mm/.style={draw=kthblue,line width=2.2pt},
+  mp/.style={->,draw=kthgrass,line width=2.4pt},
+  mb/.style={->,draw=kthorange,line width=2pt,dash pattern=on 4pt off 2pt}]
+\useasboundingbox (-0.4,-2.1) rectangle (9.2,2.1);
+  \node[fn] (s) at (0,0) {$s$};
+  \node[fn] (t) at (8.8,0) {$t$};
+  \node[pers] (Emma) at (2.3,1.65) {Emma};
+  \node[pers] (Elliot) at (2.3,0.55) {Elliot};
+  \node[pers] (Marcus) at (2.3,-0.55) {Marcus};
+  \node[pers] (Lovisa) at (2.3,-1.65) {Lovisa};
+  \node[sak] (RTX) at (6.5,1.65) {RTX 5090};
+  \node[sak] (PS5) at (6.5,0.55) {PS5 Pro};
+  \node[sak] (Xbox) at (6.5,-0.55) {Xbox Series X};
+  \node[sak] (Switch) at (6.5,-1.65) {Switch 2};
+  \draw[me] (Emma.east) -- (PS5.west);
+  \draw[me] (Elliot.east) -- (RTX.west);
+  \draw[me] (Marcus.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (Switch.west);
+  \draw[mm,->] (s) -- (Emma.west);
+  \draw[mm,->] (s) -- (Elliot.west);
+  \draw[fe] (s) -- (Marcus.west);
+  \draw[mm,->] (s) -- (Lovisa.west);
+  \draw[mm,->] (RTX.east) -- (t);
+  \draw[mm,->] (PS5.east) -- (t);
+  \draw[mm,->] (Xbox.east) -- (t);
+  \draw[fe] (Switch.east) -- (t);
+  \draw[mm] (Emma.east) -- (RTX.west);
+  \draw[mm] (Elliot.east) -- (Xbox.west);
+  \draw[mm] (Lovisa.east) -- (PS5.west);
+  \draw[mp] (s) -- (Marcus.west);
+  \draw[mp] (Marcus.east) -- (RTX.west);
+  \draw[mb] (RTX.west) -- (Emma.east);
+  \draw[mp] (Emma.east) -- (PS5.west);
+  \draw[mb] (PS5.west) -- (Lovisa.east);
+  \draw[mp] (Lovisa.east) -- (Switch.west);
+  \draw[mp] (Switch.east) -- (t);
+\end{tikzpicture}}
+\only<5>{%
+\begin{tikzpicture}[scale=0.95,pers/.style={rounded corners=3pt,draw=kthnavy,fill=white,line width=0.7pt,
+    minimum width=15mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  sak/.style={rounded corners=3pt,draw=kthblue,fill=kthlight,line width=0.7pt,
+    minimum width=21mm,minimum height=5.5mm,inner sep=1pt,font=\footnotesize},
+  me/.style={draw=black!30,line width=0.7pt},
+  mm/.style={draw=kthblue,line width=2.2pt},
+  mp/.style={->,draw=kthgrass,line width=2.4pt},
+  mb/.style={->,draw=kthorange,line width=2pt,dash pattern=on 4pt off 2pt}]
+\useasboundingbox (-0.4,-2.1) rectangle (9.2,2.1);
+  \node[fn] (s) at (0,0) {$s$};
+  \node[fn] (t) at (8.8,0) {$t$};
+  \node[pers] (Emma) at (2.3,1.65) {Emma};
+  \node[pers] (Elliot) at (2.3,0.55) {Elliot};
+  \node[pers] (Marcus) at (2.3,-0.55) {Marcus};
+  \node[pers] (Lovisa) at (2.3,-1.65) {Lovisa};
+  \node[sak] (RTX) at (6.5,1.65) {RTX 5090};
+  \node[sak] (PS5) at (6.5,0.55) {PS5 Pro};
+  \node[sak] (Xbox) at (6.5,-0.55) {Xbox Series X};
+  \node[sak] (Switch) at (6.5,-1.65) {Switch 2};
+  \draw[me] (Emma.east) -- (RTX.west);
+  \draw[me] (Elliot.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (RTX.west);
+  \draw[me] (Lovisa.east) -- (PS5.west);
+  \draw[mm,->] (s) -- (Emma.west);
+  \draw[mm,->] (s) -- (Elliot.west);
+  \draw[mm,->] (s) -- (Marcus.west);
+  \draw[mm,->] (s) -- (Lovisa.west);
+  \draw[mm,->] (RTX.east) -- (t);
+  \draw[mm,->] (PS5.east) -- (t);
+  \draw[mm,->] (Xbox.east) -- (t);
+  \draw[mm,->] (Switch.east) -- (t);
+  \draw[mm] (Emma.east) -- (PS5.west);
+  \draw[mm] (Elliot.east) -- (Xbox.west);
+  \draw[mm] (Marcus.east) -- (RTX.west);
+  \draw[mm] (Lovisa.east) -- (Switch.west);
+\end{tikzpicture}}
+\par\smallskip{\scriptsize\textcolor{kthblue}{\textbf{matchat}}\quad\textcolor{kthgrass}{\textbf{förbättrande stig}}\quad\textcolor{kthorange}{\textbf{bakåtkant: ångra}}}
+\vfill
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,
+  left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+\only<1>{Alla kapaciteter är 1. BFS hittar $s\to$ Emma $\to$ RTX $\to t$. Emma får grafikkortet. Tills vidare.}\only<2>{$s\to$ Elliot $\to$ Xbox $\to t$: RTX-kortet är upptaget, så Elliot tar sitt andra val.}\only<3>{$s\to$ Lovisa $\to$ PS5 $\to t$. Tre av fyra har en klapp. Marcus står kvar tomhänt.}\only<4>{Enda stigen: Marcus tar RTX från Emma, Emma tar PS5 från Lovisa, Lovisa tar Switch 2. Två bakåtkanter (streckade).}\only<5>{Flöde 4 = perfekt matchning. Stigen i matchningstermer: alternerande ny, bort, ny, bort, ny.}
+\end{tcolorbox}
+\end{frame}

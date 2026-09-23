@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.85]
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[sat] (s) -- node[fl] {6/6} (b);
+  \draw[sat] (b) -- node[fl] {1/1} (a);
+  \draw[sat] (a) -- node[fl] {1/1} (t);
+  \draw[sat] (a) -- node[fl] {2/2} (c);
+  \draw[sat] (b) -- node[fl] {5/5} (c);
+  \draw[sat] (c) -- node[fl] {7/7} (t);
+  \draw[cutline] plot[smooth,tension=0.7] coordinates {(3.3,3.35) (2.95,2.2) (2.9,1.3) (3.3,0.1) (3.35,-0.5)};
+  \node[below,font=\scriptsize\bfseries,text=plum] at (3.35,-0.5) {$C_1$};
+  \draw[cutline] (4.98,3.3) -- (4.98,-0.5) node[below,font=\scriptsize\bfseries,text=plum] {$C_2$};
+\end{tikzpicture}

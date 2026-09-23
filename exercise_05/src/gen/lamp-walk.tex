@@ -1,0 +1,340 @@
+\begin{frame}{Viggos algoritm steg för steg ($n=5$, trasiga: $o_2$ och $o_5$)}
+\only<1>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[black!45,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[black!45,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{2}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (3.75,0.58) {$o_{3}$};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (5.0,0.58) {$o_{4}$};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (6.25,0.58) {$o_{5}$};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {\textit{tom}};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: —};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 0};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+Det lyser inte. Minst en lampa är trasig — men vilka?
+\end{tcolorbox}}
+\only<2>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[lampyellow!45] (1.25,0.62) circle (0.5);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[lampyellow!45] (2.5,0.62) circle (0.5);
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (2.5,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[lampyellow!45] (3.75,0.62) circle (0.5);
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (3.75,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[lampyellow!45] (5.0,0.62) circle (0.5);
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (5.0,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[lampyellow!45] (6.25,0.62) circle (0.5);
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {$o_2$, $o_3$, $o_4$, $o_5$};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: —};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 4};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+Byt alla utom plats 1 mot nya: 4 byten. De gamla i säcken. Det lyser! \emph{Fantastiskt.} $o_1$ är hel.
+\end{tcolorbox}}
+\only<3>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[black!45,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[black!45,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{2}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=black!8,draw=kthgreen,line width=1.3pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (3.75,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=black!8,draw=kthgreen,line width=1.3pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (5.0,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=black!8,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {$o_3$, $o_4$, $o_5$};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: —};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 5};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+Plats 2: ny ut, $o_2$ in. Mörkt. \emph{Ånej.} $o_2$ är trasig.
+\end{tcolorbox}}
+\only<4>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[lampyellow!45] (1.25,0.62) circle (0.5);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[lampyellow!45] (2.5,0.62) circle (0.5);
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{3}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[lampyellow!45] (3.75,0.62) circle (0.5);
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (3.75,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[lampyellow!45] (5.0,0.62) circle (0.5);
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (5.0,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[lampyellow!45] (6.25,0.62) circle (0.5);
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {$o_4$, $o_5$};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: $o_2$};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 6};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+$o_2$ ut, $o_3$ in på samma plats. Det lyser. \emph{Otroligt.} $o_3$ är hel.
+\end{tcolorbox}}
+\only<5>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[lampyellow!45] (1.25,0.62) circle (0.5);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[lampyellow!45] (2.5,0.62) circle (0.5);
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{3}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[lampyellow!45] (3.75,0.62) circle (0.5);
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (3.75,0.58) {$o_{4}$};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[lampyellow!45] (5.0,0.62) circle (0.5);
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (5.0,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[lampyellow!45] (6.25,0.62) circle (0.5);
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {$o_5$};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: $o_2$};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 7};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+Plats 3: ny ut, $o_4$ in. Det lyser. \emph{Häpnadsväckande.}
+\end{tcolorbox}}
+\only<6>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[black!45,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[black!45,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{3}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (3.75,0.58) {$o_{4}$};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=black!8,draw=kthnavy,line width=0.7pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (5.0,0.58) {$o_{5}$};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=black!8,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {\textit{tom}};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: $o_2$};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 8};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+Plats 4: ny ut, $o_5$ in. Mörkt: $o_5$ är trasig. Säcken är tom.
+\end{tcolorbox}}
+\only<7>{%
+\begin{columns}[T]
+\begin{column}{0.62\textwidth}\centering
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (0.35,-0.75) rectangle (7.15,1.25);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (7.0,0);
+  \draw[kthorange,line width=1pt] (0.5,0) -- (0.5,-0.45) -- (7.0,-0.45) -- (7.0,0);
+  \fill[lampyellow!45] (1.25,0.62) circle (0.5);
+  \fill[black!55] (1.12,0.02) rectangle (1.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (1.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (1.25,0.58) {$o_{1}$};
+  \node[font=\tiny,text=black!45] at (1.25,-0.22) {1};
+  \fill[lampyellow!45] (2.5,0.62) circle (0.5);
+  \fill[black!55] (2.37,0.02) rectangle (2.63,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (2.5,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (2.5,0.58) {$o_{3}$};
+  \node[font=\tiny,text=black!45] at (2.5,-0.22) {2};
+  \fill[lampyellow!45] (3.75,0.62) circle (0.5);
+  \fill[black!55] (3.62,0.02) rectangle (3.88,0.22);
+  \filldraw[fill=lampyellow,draw=kthnavy,line width=0.7pt] (3.75,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthnavy] at (3.75,0.58) {$o_{4}$};
+  \node[font=\tiny,text=black!45] at (3.75,-0.22) {3};
+  \fill[lampyellow!45] (5.0,0.62) circle (0.5);
+  \fill[black!55] (4.87,0.02) rectangle (5.13,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (5.0,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (5.0,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (5.0,-0.22) {4};
+  \fill[lampyellow!45] (6.25,0.62) circle (0.5);
+  \fill[black!55] (6.12,0.02) rectangle (6.38,0.22);
+  \filldraw[fill=lampyellow,draw=kthgreen,line width=1.3pt] (6.25,0.58) circle (0.34);
+  \node[font=\footnotesize,text=kthgreen] at (6.25,0.58) {\textbf{N}};
+  \node[font=\tiny,text=black!45] at (6.25,-0.22) {5};
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{tikzpicture}[scale=0.9]
+  \useasboundingbox (-0.2,-0.75) rectangle (4.9,1.25);
+  \filldraw[fill=sand,draw=bark,line width=0.8pt,rounded corners=6pt] (0,-0.5) -- (1.9,-0.5) -- (1.7,0.75) -- (1.25,0.95) -- (0.65,0.95) -- (0.2,0.75) -- cycle;
+  \draw[bark,line width=1pt] (0.6,0.95) -- (1.3,0.95);
+  \node[font=\tiny,text=bark] at (0.95,1.13) {säcken};
+  \node[font=\scriptsize,text width=1.6cm,align=center] at (0.95,0.2) {\textit{tom}};
+  \node[font=\scriptsize,anchor=west] at (2.25,0.65) {trasiga: $o_2$, $o_5$};
+  \node[font=\small\bfseries,text=kthnavy,anchor=west] at (2.25,0.0) {byten: 9};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\medskip
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+$o_5$ ut, en ny in. \emph{Hilvide.} $9=2n-1$ byten.
+\end{tcolorbox}}
+\vfill
+{\footnotesize\color{black!55}Invariant: platserna före $i$ har hela gamla lampor, plats $i$ en gammal lampa, platserna efter $i$ nya. (Utropen är lånade från Alice.)}
+\varstrip{Generalisering}{algoritmen}{vilka lampor som är trasiga}{att varje gammal lampa provas en gång}
+\end{frame}

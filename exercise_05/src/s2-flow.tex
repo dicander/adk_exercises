@@ -1,0 +1,581 @@
+% ======================================================================
+%  UPPGIFT 2: FÖRÄNDRAT FLÖDE
+% ======================================================================
+\section{2 Förändrat flöde}
+
+\uppgiftsbild{2}{Förändrat flöde}
+{uppdatera ett maximalt flöde när en kapacitet ändras med 1 — i linjär tid, utan att börja om.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Vad lösningen $\Phi$ \emph{är}: flödet på varje kant, inte bara värdet.
+  \item Riktningen: ökning (högst $+1$) mot minskning (högst $-1$).
+  \item Kanten: mättad eller inte — och ligger den i \emph{alla} eller i \emph{något} minsnitt?
+  \item ”Linjär tid”: linjär i \emph{vad}?
+\end{itemize}}
+
+\input{gen/ff-walk}
+
+\begin{frame}{Repetition: maxflöde = minsnitt}
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\centering
+\input{gen/minsnitt}\par\smallskip
+\footnotesize Två minsnitt, $C_1$ och $C_2$, båda 8.\\ Att de är två kommer att spela roll.
+\end{column}
+\begin{column}{0.53\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}lll@{}}
+\toprule
+$S$ ($s$-sidan) & kanter $S\to T$ & kapacitet\\
+\midrule
+$\{s\}$ & $s{\to}a$, $s{\to}b$ & $3+6=9$\\
+$\{s,a\}$ & $s{\to}b$, $a{\to}t$, $a{\to}c$ & $6+1+2=9$\\
+$\{s,b\}$ & $s{\to}a$, $b{\to}a$, $b{\to}c$ & $3+1+5=9$\\
+$\{s,c\}$ & $s{\to}a$, $s{\to}b$, $c{\to}t$ & $3+6+7=16$\\
+\rowcolor{plum!12} $\{s,a,b\}$ & $a{\to}t$, $a{\to}c$, $b{\to}c$ & $1+2+5=\mathbf{8}$\enspace$C_1$\\
+$\{s,a,c\}$ & $s{\to}b$, $a{\to}t$, $c{\to}t$ & $6+1+7=14$\\
+$\{s,b,c\}$ & $s{\to}a$, $b{\to}a$, $c{\to}t$ & $3+1+7=11$\\
+\rowcolor{plum!12} $\{s,a,b,c\}$ & $a{\to}t$, $c{\to}t$ & $1+7=\mathbf{8}$\enspace$C_2$\\
+\bottomrule
+\end{tabular}
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Snittets kapacitet är summan av kanterna som korsar det.” Bara kanterna från $S$ till $T$
+räknas. För $S=\{s,a\}$ korsar $b\to a$ snittet baklänges och räknas inte.
+\end{missbox}
+\end{frame}
+
+\begin{frame}{Uppgift 2: Förändrat flöde}
+\begin{infobox}
+Anta att vi har en lösning $\Phi$ till flödesproblemet för en graf. Beskriv en effektiv algoritm
+som hittar ett nytt maximalt flöde om kapaciteten längs en viss kant \textbf{a)}~ökar med en enhet,
+\textbf{b)}~minskar med en enhet. Tidskomplexiteten ska vara linjär, alltså $O(|V|+|E|)$.
+\end{infobox}
+{\small\textbf{Vad består $\Phi$ av?} Två maximala flöden i samma nät:}\par
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$\Phi_1$, värde 8}\par
+\input{gen/f2}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$\Phi_2$, värde 8}\par
+\input{gen/fstar}
+\end{column}
+\begin{column}{0.31\textwidth}
+\footnotesize
+Samma värde. Olika flöden: $s{\to}a$ 2 mot 3, $s{\to}b$ 6 mot 5, $b{\to}a$ 1 mot 0.\par\smallskip
+$\Phi$ är flödet $f(e)$ \emph{på varje kant}. Med bara talet 8 finns inget att uppdatera — då
+återstår att räkna om från början.
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{nätet och värdet 8}{flödet på kanterna}{att $\Phi$ är en funktion på kanterna, inte ett tal}
+\end{frame}
+
+% ---------------------------------------------------------------- linjär i vad
+\begin{frame}{Linjär i vad?}
+\begin{columns}[T]
+\begin{column}{0.22\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Grafen}\par\smallskip
+\begin{tikzpicture}[scale=0.95]
+  \node[gv] (1) at (0,1.3) {1}; \node[gv] (2) at (1.3,1.3) {2};
+  \node[gv] (3) at (0,0) {3};   \node[gv] (4) at (1.3,0) {4};
+  \draw[ge] (1)--(2) (1)--(3) (2)--(3) (3)--(4);
+\end{tikzpicture}\par
+{\scriptsize $|V|=4$, $|E|=4$}
+\end{column}
+\begin{column}{0.36\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Grannlistor: $|V|+2|E|=12$ platser}\par\smallskip
+\begin{tikzpicture}[cell/.style={draw=kthnavy,minimum width=4.4mm,minimum height=4.4mm,
+    inner sep=0pt,font=\scriptsize},head/.style={cell,fill=kthlight},ent/.style={cell,fill=kthmint!70}]
+  \foreach \v/\ns [count=\r] in {1/{2,3},2/{1,3},3/{1,2,4},4/{3}} {
+    \node[head] at (0,-0.5*\r) {\v};
+    \draw[->,kthnavy,line width=0.5pt] (0.25,-0.5*\r) -- (0.52,-0.5*\r);
+    \foreach \n [count=\k] in \ns { \node[ent] at (0.3+0.44*\k,-0.5*\r) {\n}; }
+  }
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.36\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Grannmatris: $|V|^2=16$ platser}\par\smallskip
+\begin{tikzpicture}[cell/.style={draw=kthnavy,minimum width=4.4mm,minimum height=4.4mm,
+    inner sep=0pt,font=\scriptsize},c0/.style={fill=white,text=black!40},c1/.style={fill=kthmint!70}]
+  \foreach \row [count=\i] in {{0,1,1,0},{1,0,1,0},{1,1,0,1},{0,0,1,0}} {
+    \node[font=\scriptsize,text=black!50] at (0,-0.44*\i) {\i};
+    \node[font=\scriptsize,text=black!50] at (0.44*\i,0) {\i};
+    \foreach \x [count=\j] in \row { \node[cell,c\x] at (0.44*\j,-0.44*\i) {\x}; }
+  }
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\smallskip
+\footnotesize
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item \textbf{Linjär tid} = högst en konstant gånger \emph{indatas storlek}. Man hinner läsa
+        indata ett fast antal gånger, inte mer.
+  \item BFS/DFS läser varje plats en gång: $O(|V|+|E|)$ med grannlistor, $O(|V|^2)$ med
+        grannmatris. \emph{Båda är linjära} — i storleken på sin representation.
+  \item $O(|V|+|E|)$ är inte ”linjärt i $|V|$”. I en fullständig graf är
+        $|E|=\binom{|V|}{2}$, och då är $O(|V|+|E|)=O(|V|^2)$.
+\end{itemize}
+\varstrip{Separation}{grafen och algoritmen (BFS)}{representationen}{att ”linjär” mäts i indatas storlek}
+\end{frame}
+
+\begin{frame}{Linjär i vad? Dagens uppgifter}
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}p{0.17\textwidth}p{0.3\textwidth}p{0.15\textwidth}X@{}}
+\toprule
+\textbf{Uppgift} & \textbf{Indatas storlek} & \textbf{”Linjärt”} & \textbf{Kommentar}\\
+\midrule
+2 Förändrat flöde & $|V|+|E|$ (grafen och $\Phi$) & $O(|V|+|E|)$ & ett par grafsökningar\\
+3 Eulercykel & $|V|+|E|$ & $O(|V|+|E|)$ & utdata har $|E|+1$ hörn\\
+4 Julklappar & $n$ listor à högst $m$ saker & $O(n+nm)$ & ett varv av Ford--Fulkerson; det blir $n$ varv\\
+5 Sökning & $n$ sorterade tal & — & $\Theta(\log n)$: läser inte ens all indata\\
+6 Lampor & $n$ lampor & $\Theta(n)$ byten & uppgiften vill ha exakt antal: $2n-1$\\
+\bottomrule
+\end{tabularx}
+\medskip
+\begin{missbox}
+”Eulercykeln hittas i $O(n)$.” (Så står det i äldre övningsbilder.) Om $n=|V|$ är det fel: en graf
+med $|V|$ hörn kan ha $\Theta(|V|^2)$ kanter, och alla ska med i cykeln.
+\end{missbox}
+\varstrip{Separation}{ordet ”linjär”}{storleksmåttet: $|V|+|E|$, $|V|^2$, $n$, antal byten}{att ”linjär” alltid är linjär \emph{i något}}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Linjär i ett tal: pseudopolynomisk tid}
+\begin{columns}[T]
+\begin{column}{0.38\textwidth}
+\centering
+\begin{tikzpicture}[scale=1.05]
+  \node[fn] (s) at (0,1.1) {$s$};   \node[fn] (a) at (1.7,2.2) {$a$};
+  \node[fn] (b) at (1.7,0) {$b$};   \node[fn] (t) at (3.4,1.1) {$t$};
+  \draw[fe] (s) -- node[fl] {$C$} (a);  \draw[fe] (s) -- node[fl] {$C$} (b);
+  \draw[fe] (a) -- node[fl] {$C$} (t);  \draw[fe] (b) -- node[fl] {$C$} (t);
+  \draw[sat] (a) -- node[fl] {1} (b);
+\end{tikzpicture}\par\smallskip
+{\footnotesize $C=1\,000\,000\approx2^{20}$}
+\end{column}
+\begin{column}{0.59\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Ford--Fulkerson väljer stigar godtyckligt. Med otur: varannan stig $s\to a\to b\to t$,
+        varannan $s\to b\to a\to t$ (baklänges på $a\to b$).
+  \item Varje stig ger $+1$. Maxflödet är $2C$: två miljoner varv.
+  \item Indata: fem kanter, tal på cirka 20 bitar. Linjärt i \emph{talet} $C$, exponentiellt
+        i antalet \emph{bitar}.
+  \item Edmonds--Karp (kortaste stigen först) behöver två varv här, och $O(|V|\,|E|^2)$ i allmänhet.
+\end{itemize}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+I uppgift 4 är alla kapaciteter 1 och $|f^*|\le n$. Där är $O(|E|\cdot|f^*|)$ helt ofarligt.
+\end{kaninbox}
+\varstrip{Kontrast}{nätet}{stigvalet: godtyckligt eller kortast}{linjärt i ett tal $\neq$ linjärt i indatas längd}
+\end{frame}}
+
+% ---------------------------------------------------------------- 2a
+\begin{frame}{2a: kapaciteten på $(u,v)$ ökar med 1}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item $\Phi$ är fortfarande ett tillåtet flöde: kapaciteten blev ju bara större.
+  \item I restflödesgrafen $G_\Phi$ ändras en enda sak: restkapaciteten $u\to v$ ökar med 1.
+  \item Kör \textbf{en} iteration av Ford--Fulkerson: sök en stig $s\leadsto t$ i $G_\Phi$.
+  \item Finns en stig: öka flödet med 1 längs den. Annars är $\Phi$ fortfarande maximalt.
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+{\small\bfseries\color{kthnavy}ÖkaKapacitet$(G,\Phi,(u,v))$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $c(u,v)\gets c(u,v)+1$
+\State bygg $G_\Phi$ \Comment{$O(|V|+|E|)$}
+\State $P\gets\textsc{BFS}(G_\Phi,s,t)$ \Comment{$O(|V|+|E|)$}
+\If{$P$ finns}
+  \State öka $\Phi$ med 1 längs $P$ \Comment{$O(|V|)$}
+\EndIf
+\State \Return $\Phi$
+\end{algorithmic}
+\end{column}
+\end{columns}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+\textbf{Genväg:} var $(u,v)$ inte mättad händer ingenting. Minsnittet som Ford--Fulkerson hittade
+(de nåbara hörnen) har bara mättade kanter ut, så dess kapacitet är oförändrad.
+\end{ahabox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Kör Ford--Fulkerson igen.” Från början tar det $O(|E|\cdot|f^*|)$ och kastar bort $\Phi$.
+\end{missbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{2a, exempel: $a\to t$ får kapacitet 2}
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$\Phi_1$ med ny kapacitet}\par
+\input{gen/2a-net}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$G_\Phi$: stigen $s\to a\to t$}\par
+\input{gen/2a-res}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Nytt flöde, värde 9}\par
+\input{gen/2a-ny}
+\end{column}
+\end{columns}
+\vfill
+\small
+Restkanten $a\to t$ (kapacitet 1) är ny, och $s\to a$ hade redan 1 kvar. BFS hittar
+$s\to a\to t$. Kanten $a\to t$ ligger i båda minsnitten $C_1$ och $C_2$, så båda växte till 9.
+\varstrip{Generalisering}{metoden}{exemplet}{en sökning, en enhet}
+\end{frame}
+
+\begin{frame}{2a, exempel: $a\to c$ får kapacitet 3}
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$\Phi_1$ med ny kapacitet}\par
+\input{gen/2a-ac-net}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$G_\Phi$: nåbart från $s$}\par
+\input{gen/2a-res-ac}
+\end{column}
+\begin{column}{0.32\textwidth}
+\small
+Nu nås $c$ via $s\to a\to c$ — men $c\to t$ är mättad. $t$ nås inte.\par\medskip
+$\Phi_1$ är fortfarande maximalt: 8. Minsnittet $C_2=\{s,a,b,c\}$ innehåller inte $a\to c$
+och har kvar kapaciteten 8.
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Kanten var mättad, alltså hjälper det att öka den.” Mättad är nödvändigt men inte tillräckligt.
+\end{missbox}
+\varstrip{Kontrast}{nätet och $\Phi_1$}{vilken mättad kant som ökas}{att en ökning kan vara verkningslös}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Varför räcker en enda sökning?}
+\begin{columns}[T]
+\begin{column}{0.56\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Ett snitts kapacitet är summan av kanterna $S\to T$. När $c(u,v)$ ökar med 1 växer
+        varje snitt med 1 (om $u\in S$, $v\in T$) eller med 0.
+  \item Maxflöde = minsnitt, så det nya maxflödet är högst $|\Phi|+1$.
+  \item Allt är heltal: antingen samma eller exakt $+1$. En förbättrande stig, sedan är vi klara.
+  \item Ingen stig? Då är $\Phi$ maximalt. Det är Ford--Fulkersons eget stoppvillkor.
+\end{itemize}
+\end{column}
+\begin{column}{0.41\textwidth}
+\centering
+\input{gen/minsnitt-s}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Och om kapaciteten ökar med $k$?} Då kan maxflödet öka med upp till $k$, och det kan behövas
+$k$ sökningar: $O(k(|V|+|E|))$. Linjärt bara om $k$ är en konstant.
+\end{kaninbox}
+\end{frame}}
+
+\begin{frame}{Samma ändring, olika kant: när hjälper $+1$?}
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\centering
+\input{gen/minsnitt-s}\par
+\begin{ahabox}[fontupper=\footnotesize]
+Maxflödet ökar precis när kanten ligger i \textbf{alla} minsnitt. Ett enda minsnitt utan
+kanten håller taket kvar.
+\end{ahabox}
+\end{column}
+\begin{column}{0.57\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Kant & $\Phi_1$ & mättad & i $C_1$ & i $C_2$ & $+1$ ger\\
+\midrule
+\rowcolor{kthmint!50} $a{\to}t$ & 1/1 & \ja & \ja & \ja & \textbf{9}\\
+$a{\to}c$ & 2/2 & \ja & \ja & & 8\\
+$b{\to}c$ & 5/5 & \ja & \ja & & 8\\
+$c{\to}t$ & 7/7 & \ja & & \ja & 8\\
+$s{\to}b$ & 6/6 & \ja & & & 8\\
+$b{\to}a$ & 1/1 & \ja & & & 8\\
+$s{\to}a$ & 2/3 & & & & 8\\
+\bottomrule
+\end{tabular}
+\par\smallskip
+\begin{missbox}[fontupper=\footnotesize]
+”Mättad kant $\Rightarrow$ ökningen hjälper.” Sex av sju kanter är mättade. En hjälper.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Separation}{nätet, $\Phi_1$ och ändringen $+1$}{kanten}{att minsnitten bestämmer, inte mättnaden}
+\end{frame}
+
+% ---------------------------------------------------------------- 2b
+\begin{frame}{2b: kapaciteten på $(u,v)$ minskar med 1}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\small
+\textbf{Fall 1:} $(u,v)$ är inte mättad. $\Phi$ är fortfarande tillåtet, och maxflödet kan inte
+öka när en kapacitet minskar. Klart.\par\smallskip
+\textbf{Annars:} minska $\Phi(u,v)$ med 1. Nu kommer det in en enhet mer till $u$ än som går ut,
+och en enhet mindre till $v$.\par\smallskip
+\textbf{Fall 2:} finns en stig $u\leadsto v$ i $G_\Phi$? Led enheten den vägen. Värdet är
+oförändrat.\par\smallskip
+\textbf{Fall 3:} annars: skicka tillbaka enheten, $u\leadsto s$, och ta bort en enhet från $v$
+till $t$ genom att gå $t\leadsto v$. Värdet minskar med 1.
+\end{column}
+\begin{column}{0.49\textwidth}
+{\small\bfseries\color{kthnavy}MinskaKapacitet$(G,\Phi,(u,v))$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $c(u,v)\gets c(u,v)-1$
+\If{$\Phi(u,v)\le c(u,v)$} \State \Return $\Phi$ \Comment{fall 1}
+\EndIf
+\State $\Phi(u,v)\gets\Phi(u,v)-1$ \Comment{obalans i $u$, $v$}
+\If{stig $P\colon u\leadsto v$ finns i $G_\Phi$}
+  \State öka $\Phi$ med 1 längs $P$ \Comment{fall 2}
+\Else
+  \State öka $\Phi$ med 1 längs en stig $u\leadsto s$ \Comment{fall 3}
+  \State öka $\Phi$ med 1 längs en stig $t\leadsto v$
+\EndIf
+\State \Return $\Phi$
+\end{algorithmic}
+\smallskip
+{\footnotesize Högst tre grafsökningar: $O(|V|+|E|)$.}
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Minska flödet på kanten med 1, klart.” Då kommer mer in i $u$ än som går ut. Det är inte längre
+ett flöde.
+\end{missbox}
+\end{frame}
+
+\begin{frame}{2b, exempel (fall 2): $b\to a$ får kapacitet 0}
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Obalans efter minskningen}\par
+\input{gen/2b-ba-net}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$G_\Phi$: stigen $b\to s\to a$}\par
+\input{gen/2b-ba-res}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Nytt flöde, värde 8}\par
+\input{gen/2b-ba-ny}
+\end{column}
+\end{columns}
+\vfill
+\small
+$b$ har en enhet för mycket, $a$ en för lite. Stigen $b\to s\to a$ går baklänges på $s\to b$ och
+framlänges på $s\to a$: enheten tar vägen $s\to a$ i stället. Resultatet är $\Phi_2$ — det andra
+maxflödet från bilden om vad $\Phi$ är.
+\varstrip{Kontrast}{nätet, $\Phi_1$ och minskningen}{kanten (här: ingen i något minsnitt)}{omledning bevarar värdet}
+\end{frame}
+
+\begin{frame}{2b, exempel (fall 3): $a\to c$ får kapacitet 1}
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Obalans efter minskningen}\par
+\input{gen/2b-ac-net}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}$G_\Phi$: nåbart från $a$}\par
+\input{gen/2b-ac-res}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Nytt flöde, värde 7}\par
+\input{gen/2b-ac-ny}
+\end{column}
+\end{columns}
+\vfill
+\small
+Från $a$ nås bara $\{a,s,b\}$, inte $c$. Alltså fall 3: skicka tillbaka längs $a\to s$ och ta
+bort en enhet längs $t\to c$ (båda baklänges i restgrafen, gröna). Kanten $a\to c$ ligger i
+minsnittet $C_1$, som nu har kapacitet 7.
+\varstrip{Kontrast}{nätet, $\Phi_1$ och minskningen}{kanten (här: i minsnittet $C_1$)}{när värdet måste sjunka}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Varför finns stigarna $u\leadsto s$ och $t\leadsto v$?}
+\begin{columns}[T]
+\begin{column}{0.57\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item \textbf{Flödesuppdelning:} varje flöde är en summa av $s$--$t$-stigar och cykler med
+        positivt flöde. $\Phi_1$: $s{\to}b{\to}c{\to}t$ (5), $s{\to}a{\to}c{\to}t$ (2),
+        $s{\to}b{\to}a{\to}t$ (1).
+  \item $(u,v)$ var mättad, så $\Phi(u,v)\ge1$: någon stig eller cykel går genom $(u,v)$.
+  \item \textbf{Stig} $s\leadsto u\to v\leadsto t$: flödet på delarna ger bakåtkanter
+        $u\leadsto s$ och $t\leadsto v$ i $G_\Phi$.
+  \item \textbf{Cykel} genom $(u,v)$: resten av cykeln, baklänges, är en stig $u\leadsto v$.
+        Då var vi i fall 2.
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthgrass}$s\to a\to c\to t$ bär 2 enheter}\par
+\input{gen/f2-stig-ac}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Gör sökningarna en i taget: först $u\leadsto s$, uppdatera $\Phi$, sedan $t\leadsto v$ i den nya
+restgrafen. Samma uppdelningsargument på det uppdaterade flödet visar att den andra stigen
+fortfarande finns.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Är flödet i fall 3 säkert maximalt?}
+\begin{columns}[T]
+\begin{column}{0.58\textwidth}
+\small
+\footnotesize
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Låt $A$ = hörnen som nås från $u$ i $G_\Phi$. Fall 3 betyder $v\notin A$.
+  \item $s\in A$, för stigen $u\leadsto s$ finns. $t\notin A$, annars fanns $u\leadsto t\leadsto v$.
+  \item Ingen restkant lämnar $A$: kanterna ut ur $A$ är mättade, kanterna in är tomma.
+  \item Flödet över snittet är då lika med dess kapacitet, och det är $|\Phi|-1$: enheten som
+        blev över i $u$ stannar i $A$.
+  \item Tillbakatrycken sker helt inom $A$ respektive helt utanför. Nya flödet har värdet
+        $|\Phi|-1$ = ett snitts kapacitet. Alltså maximalt.
+\end{itemize}
+\end{column}
+\begin{column}{0.39\textwidth}
+\centering
+\input{gen/2b-ac-A}\par
+{\footnotesize Här: $A=\{s,a,b\}$, och $1+1+5=7$.}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Ingen extra kontroll behövs. (En extra BFS skulle inte förstöra linjäriteten. Den är bara onödig.)
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Alternativ lösning: b) via a)}
+\small
+Om $(u,v)$ är mättad:
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item \textbf{Ta bort en enhet flöde genom $(u,v)$:} minska $\Phi(u,v)$ och tryck tillbaka
+        längs $u\leadsto s$ och $t\leadsto v$. Nu är $\Phi$ tillåtet med den nya kapaciteten och
+        har värdet $|\Phi|-1$.
+  \item \textbf{Gör som i a):} en sökning $s\leadsto t$. Maxflödet är nu $|\Phi|-1$ eller
+        $|\Phi|$, så en förbättrande stig räcker.
+\end{enumerate}
+\medskip
+Exempel $b\to a$: steg 1 tar bort enheten på $s\to b\to a\to t$ (värde 7), steg 2 hittar
+$s\to a\to t$ (värde 8). Samma slutresultat, $\Phi_2$.
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Tre sökningar i stället för en eller två — fortfarande $O(|V|+|E|)$. Vinsten är att
+korrekthetsbeviset blir kortare: efter steg 1 är vi exakt i situationen i a).
+\end{kaninbox}
+\varstrip{Generalisering}{metoden: restgraf och en sökning}{problemet: öka eller minska}{att b) är ”ta bort en enhet” följt av a)}
+\end{frame}}
+
+% ---------------------------------------------------------------- fusion
+\begin{frame}{Öka och minska, kant för kant}
+\begin{columns}[T]
+\begin{column}{0.58\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}lcccccl@{}}
+\toprule
+Kant & $\Phi_1$ & i $C_1$ & i $C_2$ & $+1$ & $-1$ & fall vid $-1$\\
+\midrule
+$a{\to}t$ & 1/1 & \ja & \ja & \textbf{9} & \textbf{7} & 3\\
+$a{\to}c$ & 2/2 & \ja & & 8 & \textbf{7} & 3\\
+$b{\to}c$ & 5/5 & \ja & & 8 & \textbf{7} & 3\\
+$c{\to}t$ & 7/7 & & \ja & 8 & \textbf{7} & 3\\
+$s{\to}b$ & 6/6 & & & 8 & 8 & 2: $s{\to}a{\to}b$\\
+$b{\to}a$ & 1/1 & & & 8 & 8 & 2: $b{\to}s{\to}a$\\
+$s{\to}a$ & 2/3 & & & 8 & 8 & 1\\
+\bottomrule
+\end{tabular}
+\end{column}
+\begin{column}{0.39\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+$+1$ ökar maxflödet $\iff$ kanten ligger i \textbf{alla} minsnitt.\par\smallskip
+$-1$ minskar maxflödet $\iff$ kanten ligger i \textbf{något} minsnitt.
+\end{ahabox}
+\end{column}
+\end{columns}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Ökning och minskning är symmetriska.” $a\to c$ kan inte öka maxflödet, men kan minska det.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Mättad är en egenskap hos kanten.” Hos kanten \emph{och} $\Phi$: $s\to b$ är mättad i $\Phi_1$
+(6/6) men inte i $\Phi_2$ (5/6).
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Fusion}{nätet}{kanten och riktningen samtidigt}{alla mot något minsnitt; mättnad beror på $\Phi$}
+\end{frame}
+
+\begin{frame}{Vanliga fel i uppgift 2}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”$\Phi$ är ett tal, 8.” Det är flödet på varje kant. Med bara talet måste man räkna om från början.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Öka flödet på $(u,v)$ med 1.” Då bryts flödesbevarandet i $u$ och $v$, och enheten kanske inte
+ens kan komma fram till $t$.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Minska flödet på $(u,v)$ med 1, klart.” Samma fel åt andra hållet. Obalansen måste ledas om
+(fall 2) eller skickas tillbaka (fall 3).
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Linjär tid, alltså $O(|V|)$.” Linjärt i indatas storlek, här $|V|+|E|$. Se ”Linjär i vad?”.
+\end{missbox}
+\end{column}
+\end{columns}
+\vfill
+\begin{ahabox}[fontupper=\footnotesize]
+Gemensam nämnare för de rätta lösningarna: ändra i restgrafen, gör en grafsökning, och låt
+maxflöde = minsnitt tala om att det räcker.
+\end{ahabox}
+\varstrip{Kontrast}{uppgiften}{lösningsidén, rätt och nästan rätt}{vad som gör de rätta rätt}
+\end{frame}

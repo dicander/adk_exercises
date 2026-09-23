@@ -1,0 +1,192 @@
+\begin{frame}{Repetition: Ford--Fulkerson på exempelnätet}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Flöde $f$}\ {\scriptsize(flöde/kapacitet, \textcolor{brick}{röd} = mättad)}\par\smallskip
+\only<1>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {0/3} (a);
+  \draw[fe] (s) -- node[fl] {0/6} (b);
+  \draw[fe] (b) -- node[fl] {0/1} (a);
+  \draw[fe] (a) -- node[fl] {0/1} (t);
+  \draw[fe] (a) -- node[fl] {0/2} (c);
+  \draw[fe] (b) -- node[fl] {0/5} (c);
+  \draw[fe] (c) -- node[fl] {0/7} (t);
+\end{tikzpicture}}
+\only<2>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[fe] (s) -- node[fl] {0/6} (b);
+  \draw[fe] (b) -- node[fl] {0/1} (a);
+  \draw[fe] (a) -- node[fl] {0/1} (t);
+  \draw[sat] (a) -- node[fl] {2/2} (c);
+  \draw[fe] (b) -- node[fl] {0/5} (c);
+  \draw[fe] (c) -- node[fl] {2/7} (t);
+\end{tikzpicture}}
+\only<3>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[fe] (s) -- node[fl] {1/6} (b);
+  \draw[fe] (b) -- node[fl] {0/1} (a);
+  \draw[sat] (a) -- node[fl] {1/1} (t);
+  \draw[fe] (a) -- node[fl] {1/2} (c);
+  \draw[fe] (b) -- node[fl] {1/5} (c);
+  \draw[fe] (c) -- node[fl] {2/7} (t);
+\end{tikzpicture}}
+\only<4>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[fe] (s) -- node[fl] {5/6} (b);
+  \draw[fe] (b) -- node[fl] {0/1} (a);
+  \draw[sat] (a) -- node[fl] {1/1} (t);
+  \draw[fe] (a) -- node[fl] {1/2} (c);
+  \draw[sat] (b) -- node[fl] {5/5} (c);
+  \draw[fe] (c) -- node[fl] {6/7} (t);
+\end{tikzpicture}}
+\only<5>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[sat] (s) -- node[fl] {6/6} (b);
+  \draw[sat] (b) -- node[fl] {1/1} (a);
+  \draw[sat] (a) -- node[fl] {1/1} (t);
+  \draw[sat] (a) -- node[fl] {2/2} (c);
+  \draw[sat] (b) -- node[fl] {5/5} (c);
+  \draw[sat] (c) -- node[fl] {7/7} (t);
+\end{tikzpicture}}
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Restflödesgraf $G_f$}\ {\scriptsize(\textcolor{kthblue}{kvar}, \textcolor{kthorange}{ångra})}\par\smallskip
+\only<1>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[aug] (s) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {3} (a);
+  \draw[res] (s) -- node[fl] {6} (b);
+  \draw[res] (b) -- node[fl] {1} (a);
+  \draw[res] (a) -- node[fl] {1} (t);
+  \draw[aug] (a) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {2} (c);
+  \draw[res] (b) -- node[fl] {5} (c);
+  \draw[aug] (c) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {7} (t);
+\end{tikzpicture}}
+\only<2>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[res] (s) to[bend left=20] node[fl] {1} (a);
+  \draw[resb] (a) to[bend left=20] node[fl] {2} (s);
+  \draw[aug] (s) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {6} (b);
+  \draw[res] (b) -- node[fl] {1} (a);
+  \draw[aug] (a) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (t);
+  \draw[aug] (c) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {2} (a);
+  \draw[aug] (b) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {5} (c);
+  \draw[res] (c) to[bend left=20] node[fl] {5} (t);
+  \draw[resb] (t) to[bend left=20] node[fl] {2} (c);
+\end{tikzpicture}}
+\only<3>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[res] (s) to[bend left=20] node[fl] {1} (a);
+  \draw[resb] (a) to[bend left=20] node[fl] {2} (s);
+  \draw[aug] (s) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {5} (b);
+  \draw[resb] (b) to[bend left=20] node[fl] {1} (s);
+  \draw[res] (b) -- node[fl] {1} (a);
+  \draw[resb] (t) -- node[fl] {1} (a);
+  \draw[res] (a) to[bend left=20] node[fl] {1} (c);
+  \draw[resb] (c) to[bend left=20] node[fl] {1} (a);
+  \draw[aug] (b) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {4} (c);
+  \draw[resb] (c) to[bend left=20] node[fl] {1} (b);
+  \draw[aug] (c) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {5} (t);
+  \draw[resb] (t) to[bend left=20] node[fl] {2} (c);
+\end{tikzpicture}}
+\only<4>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[res] (s) to[bend left=20] node[fl] {1} (a);
+  \draw[resb] (a) to[bend left=20] node[fl] {2} (s);
+  \draw[aug] (s) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (b);
+  \draw[resb] (b) to[bend left=20] node[fl] {5} (s);
+  \draw[aug] (b) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (a);
+  \draw[resb] (t) -- node[fl] {1} (a);
+  \draw[aug] (a) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (c);
+  \draw[resb] (c) to[bend left=20] node[fl] {1} (a);
+  \draw[resb] (c) -- node[fl] {5} (b);
+  \draw[aug] (c) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (t);
+  \draw[resb] (t) to[bend left=20] node[fl] {6} (c);
+\end{tikzpicture}}
+\only<5>{%
+\begin{tikzpicture}[scale=0.95]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \begin{scope}[on background layer]
+  \filldraw[plum!13,line width=0.8cm,line join=round] (0,1.4) -- (1.6,0) -- (2.6,2.8) -- cycle;
+  \end{scope}
+  \draw[res] (s) to[bend left=20] node[fl] {1} (a);
+  \draw[resb] (a) to[bend left=20] node[fl] {2} (s);
+  \draw[resb] (b) -- node[fl] {6} (s);
+  \draw[resb] (a) -- node[fl] {1} (b);
+  \draw[resb] (t) -- node[fl] {1} (a);
+  \draw[resb] (c) -- node[fl] {2} (a);
+  \draw[resb] (c) -- node[fl] {5} (b);
+  \draw[resb] (t) -- node[fl] {7} (c);
+\end{tikzpicture}}
+\end{column}
+\end{columns}
+\vfill
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,
+  left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.05cm,valign=center]
+\only<1>{Inget flöde än: restgrafen är bara kapaciteterna. Välj en stig, vilken som helst: $s\to a\to c\to t$, flaskhals $\min(3,2,7)=2$.}\only<2>{$|f|=2$. Bakåtkanten $c\to a$ (orange) betyder ”ångra flöde på $a\to c$”. Stig $s\to b\to c\to a\to t$ använder den: $+1$.}\only<3>{$|f|=3$. Stig $s\to b\to c\to t$, flaskhals $\min(5,4,5)=4$.}\only<4>{$|f|=7$. Stig $s\to b\to a\to c\to t$, flaskhals 1.}\only<5>{$|f|=8$. Ingen stig $s\leadsto t$ i $G_f$. Nåbara från $s$: $\{s,a,b\}$ — ett minsnitt med kapacitet $1+2+5=8$.}
+\end{tcolorbox}
+\end{frame}

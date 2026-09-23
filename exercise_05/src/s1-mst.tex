@@ -1,0 +1,414 @@
+% ======================================================================
+%  UPPGIFT 1: SPÄNNANDE TRÄD
+% ======================================================================
+\section{1 Spännande träd}
+
+\uppgiftsbild{1}{Spännande träd}
+{köra Prim och Kruskal för hand — och se \emph{varför} två olika giriga val båda blir rätt.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Kandidatmängden: \emph{hela grafen} (Kruskal) eller \emph{kanten ut ur trädet} (Prim).
+  \item Tillståndet under körningen: skog eller träd.
+  \item Vad MST beror på: bara vikternas \emph{ordning} (kontrast: kortaste väg).
+\end{itemize}}
+
+\begin{frame}{Uppgift 1: Spännande träd}
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\centering
+\input{gen/graf-ren}
+\end{column}
+\begin{column}{0.53\textwidth}
+\begin{infobox}
+Visa hur ett minimalt spännande träd hittas i grafen med både \textbf{Prims} och
+\textbf{Kruskals} algoritmer.
+\end{infobox}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item \textbf{Spännande träd:} delgraf som är ett träd och når \emph{alla} hörn.
+        Alltså exakt $|V|-1$ kanter; här $9-1=8$.
+  \item \textbf{Minimalt:} minsta möjliga summa av kantvikterna.
+  \item Båda algoritmerna är \emph{giriga}. De är bara giriga på olika saker.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Två giriga algoritmer — och en minnesregel}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{infobox}[title={\textbf{Kruskal}},coltitle=white,colbacktitle=kthblue,fonttitle=\small,
+  toptitle=1pt,bottomtitle=1pt]
+Ta den \textbf{globalt} billigaste kanten, i hela grafen, som förbinder två
+\emph{olika komponenter}. Tillståndet är en \emph{skog}.
+\end{infobox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{infobox}[title={\textbf{Prim}},coltitle=white,colbacktitle=kthblue,fonttitle=\small,
+  toptitle=1pt,bottomtitle=1pt]
+Ta den billigaste kanten som går \textbf{ut ur trädet}. Tillståndet är ett enda
+\emph{träd} som växer från en rot.
+\end{infobox}
+\end{column}
+\end{columns}
+\medskip
+\begin{center}
+\begin{tikzpicture}
+  \node[draw=kthorange,line width=1pt,fill=lampyellow!20,rounded corners=4pt,inner sep=7pt,
+        font=\LARGE] (m) {Krusk\textcolor{kthorange}{\textbf{AL}}\ \ är\ \ Glob\textcolor{kthorange}{\textbf{AL}}};
+  \node[font=\footnotesize,text=black!60,below=3pt of m]
+     {Prim är lokal. (Rimmar inte. Det är därför ingen kommer ihåg det.)};
+\end{tikzpicture}
+\end{center}
+\varstrip{Kontrast}{grafen, girigheten}{kandidatmängden}{global kantlista mot lokal snittkant}
+\end{frame}
+
+\begin{frame}{Pseudokod}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+{\small\bfseries\color{kthnavy}Kruskal$(G,w)$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $T\gets\emptyset$
+\ForAll{$v\in V$} \State \textsc{MakeSet}$(v)$ \EndFor
+\State sortera $E$ i växande vikt
+\ForAll{$(u,v)\in E$ i sorterad ordning}
+  \If{$\textsc{Find}(u)\neq\textsc{Find}(v)$}
+    \State $T\gets T\cup\{(u,v)\}$
+    \State \textsc{Union}$(u,v)$
+  \EndIf
+\EndFor
+\State \Return $T$
+\end{algorithmic}
+\end{column}
+\begin{column}{0.5\textwidth}
+{\small\bfseries\color{kthnavy}Prim$(G,w,r)$}
+\footnotesize
+\begin{algorithmic}[1]
+\ForAll{$v\in V$} \State $\mathit{key}[v]\gets\infty$;\ $\pi[v]\gets\textsc{nil}$ \EndFor
+\State $\mathit{key}[r]\gets0$
+\State $Q\gets V$ \Comment{prioritet $\mathit{key}$}
+\While{$Q\neq\emptyset$}
+  \State $u\gets\textsc{ExtractMin}(Q)$
+  \ForAll{$(u,v)\in E$}
+    \If{\colorbox{lampyellow!50}{$v\in Q$} \textbf{och} $w(u,v)<\mathit{key}[v]$}
+      \State $\pi[v]\gets u$;\ $\mathit{key}[v]\gets w(u,v)$ 
+    \EndIf
+  \EndFor
+\EndWhile
+\State \Return $\{(\pi[v],v) : v\neq r\}$
+\end{algorithmic}
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Villkoret $v\in Q$ är en detalj.” Utan det kan ett redan utplockat hörn få ny nyckel
+och ny förälder — och då är resultatet inte längre ett träd. (Just den buggen finns i
+äldre övningsbilder.)
+\end{missbox}
+\end{frame}
+
+\input{gen/kruskal}
+
+\begin{frame}{Samma tillstånd, olika kandidater}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Kruskal efter första kanten}\par\smallskip
+\input{gen/globlok-kruskal}\par
+\footnotesize Kandidater: \emph{alla} kanter som återstår i listan.\\
+Väljer \textbf{2} ($b$--$e$) — långt bort. Krusk\textbf{AL}: glob\textbf{AL}.
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Prim efter första kanten}\par\smallskip
+\input{gen/globlok-prim}\par
+\footnotesize Kandidater: bara kanter \emph{ut ur trädet} $\{a,c\}$: 7 och 9.\\
+Väljer \textbf{7} ($a$--$g$), trots att 2 finns. Prim: lokal.
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{grafen och första steget}{algoritmen}{vilken mängd ”billigast” gäller}
+\end{frame}
+
+\input{gen/prim}
+
+\begin{frame}{Facit och kontroll}
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\centering
+\input{gen/graf-mst}
+\end{column}
+\begin{column}{0.53\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Kanter: $1,2,3,4,5,7,8,10$. \quad Vikt: $\mathbf{40}$.
+  \item Kruskal förkastar \textbf{6} och \textbf{9}: båda sluter cykler.
+  \item Prim från $a$ plockar i ordningen $a,c,g,h,e,b,d,i,f$.
+  \item Samma träd, olika \emph{ordning}. Det är ingen slump: med unika vikter
+        finns bara ett MST.
+\end{itemize}
+\begin{ahabox}
+\textbf{Kontroll som alltid fungerar:} rätt antal kanter ($|V|-1$), ingen cykel,
+och varje förkastad kant är den tyngsta på sin cykel.
+\end{ahabox}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------- kaninhål
+{\kaninbg
+\begin{frame}{\kh Varför fungerar girigheten? Snitt och cykler}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{plum}Snittegenskapen}\par
+\input{gen/snitt}\par
+\footnotesize Kanterna över snittet $S=\{d,g,i\}$: 4, 5, 7.
+Den lättaste, \textbf{4}, ingår i \emph{varje} MST.
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthgreen}Cykelegenskapen}\par
+\input{gen/cykel}\par
+\footnotesize På cykeln $b$--$d$--$g$--$h$--$e$ är \textbf{6} tyngst.
+Den ingår i \emph{inget} MST.
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Kruskal:} kanten den tar är lättast över snittet (sin komponent, resten).
+\textbf{Prim:} kanten den tar är lättast över snittet (trädet, resten).
+Samma sats, två olika snitt. Därför är båda korrekta.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Union--Find: hur Kruskal vet vad som hänger ihop}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Varje komponent är ett träd av föräldrapekare; roten är komponentens namn.
+  \item \textsc{Find}$(x)$: följ pekarna till roten.
+  \item \textsc{Union}: häng den \emph{mindre} roten under den större.
+  \item \textbf{Stigkomprimering:} låt alla på vägen peka direkt på roten.
+  \item Båda knepen: amorterat $O(\alpha(n))$ per operation. $\alpha$ är i praktiken $\le4$.
+\end{itemize}
+\end{column}
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[font=\small,
+   uf/.style={circle,draw=kthnavy,minimum size=5mm,inner sep=0pt},
+   p/.style={->,draw=kthblue,line width=0.8pt}]
+  \node[font=\footnotesize\bfseries] at (0.7,3.3) {före \textsc{Find}$(z)$};
+  \node[uf,fill=kthlight] (r) at (0.7,2.7) {$r$};
+  \node[uf,fill=white] (x) at (0.7,1.9) {$x$};
+  \node[uf,fill=white] (y) at (0.7,1.1) {$y$};
+  \node[uf,fill=lampyellow!50] (z) at (0.7,0.3) {$z$};
+  \draw[p] (x) -- (r); \draw[p] (y) -- (x); \draw[p] (z) -- (y);
+  \draw[->,kthorange,line width=1pt] (1.35,1.5) -- (2.25,1.5);
+  \node[font=\footnotesize\bfseries] at (3.4,3.3) {efter};
+  \node[uf,fill=kthlight] (r2) at (3.4,2.7) {$r$};
+  \node[uf,fill=white] (x2) at (2.6,1.6) {$x$};
+  \node[uf,fill=white] (y2) at (3.4,1.6) {$y$};
+  \node[uf,fill=lampyellow!50] (z2) at (4.2,1.6) {$z$};
+  \draw[p] (x2) -- (r2); \draw[p] (y2) -- (r2); \draw[p] (z2) -- (r2);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Kruskals tid:} sortering $O(|E|\log|E|)$ + $|E|$ \textsc{Find} och $|V|-1$
+\textsc{Union}. Sorteringen dominerar. Och $\log|E|\le\log|V|^2=2\log|V|$, så
+$O(|E|\log|E|)=O(|E|\log|V|)$.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Prims tid beror på prioritetskön}
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Kö & \textsc{ExtractMin} & \textsc{DecreaseKey} & Totalt\\
+\midrule
+osorterad array & $O(|V|)$ & $O(1)$ & $O(|V|^2)$\\
+binär heap & $O(\log|V|)$ & $O(\log|V|)$ & $O(|E|\log|V|)$\\
+Fibonacciheap & $O(\log|V|)$ am. & $O(1)$ am. & $O(|E|+|V|\log|V|)$\\
+”lat” heap med kanter & $O(\log|E|)$ & — (lägg in dubbletter) & $O(|E|\log|V|)$\\
+\bottomrule
+\end{tabular}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Tät graf}, $|E|=\Theta(|V|^2)$: arrayen vinner. $O(|V|^2)$ är dessutom
+\emph{linjärt i grannmatrisens storlek}.
+\end{kaninbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Gles graf}, $|E|=O(|V|)$: heapen vinner, $O(|V|\log|V|)$.
+Samma algoritm, olika datastruktur, olika ”bästa”.
+\end{kaninbox}
+\end{column}
+\end{columns}
+\varstrip{Separation}{algoritmen (Prim)}{datastrukturen och tätheten}{att komplexitet hör till algoritm \emph{plus} datastruktur}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Borůvka (1926): alla komponenter väljer samtidigt}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Runda 1}\par
+\input{gen/boruvka1}\par
+\footnotesize Varje hörn tar sin billigaste kant:\\ 1, 2, 3, 4, 5, 8, 10. Två komponenter kvar.
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Runda 2}\par
+\input{gen/boruvka2}\par
+\footnotesize Billigaste kanten mellan dem: \textbf{7} (inte 9). Klart.
+\end{column}
+\end{columns}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Antalet komponenter minst halveras per runda $\Rightarrow$ $O(\log|V|)$ rundor à $O(|E|)$:
+$O(|E|\log|V|)$. Äldst av de tre, och lättast att parallellisera. (Kräver unika vikter
+eller konsekvent tie-break — annars kan två komponenter välja varsin kant och bilda en cykel.)
+\end{kaninbox}
+\end{frame}}
+
+% ---------------------------------------------------------------- variation
+\begin{frame}{Vanligt fel: ”billigaste kanten från där jag står”}
+\begin{columns}[T]
+\begin{column}{0.42\textwidth}
+\centering
+\input{gen/girig}
+\end{column}
+\begin{column}{0.55\textwidth}
+\begin{missbox}
+”Prim = gå längs billigaste kanten från det senaste hörnet.”
+\end{missbox}
+\small
+Från $a$: billigast är 1 till $c$. Kommer till $c$. Stannar i $c$.
+\medskip
+
+Det där är en \emph{promenad}, inte Prim. Prim tittar på alla kanter
+ut ur \emph{hela trädet} $\{a,c\}$, inte bara ut ur $c$.
+\medskip
+
+Och även när promenaden inte kör fast blir den en stig — ett spännande träd behöver
+kunna förgrena sig.
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{grafen, startpunkten}{”ut ur senaste hörnet” / ”ut ur trädet”}{snittet går runt hela trädet}
+\end{frame}
+
+\begin{frame}{Prim är inte Dijkstra}
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\centering
+{\small\bfseries\color{kthblue}MST (Prim), vikt 40}\par
+\input{gen/kontrast-mst}
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+{\small\bfseries\color{plum}Kortaste-vägträd från $a$, vikt 47}\par
+\input{gen/kontrast-spt}\par
+{\scriptsize\color{plum}avstånd: $b$ 9, $c$ 1, $d$ 13, $e$ 11, $f$ 21, $g$ 7, $h$ 11, $i$ 15}
+\end{column}
+\begin{column}{0.3\textwidth}
+\footnotesize
+Samma skelett: kö, \textsc{ExtractMin}, \textsc{DecreaseKey}. En rad skiljer:\par\smallskip
+Prim: $\mathit{key}[v]\gets w(u,v)$\par
+Dijkstra: $d[v]\gets d[u]+w(u,v)$\par\smallskip
+I MST är vägen $a\leadsto b$ lång: $7+4+3+2=16$. Dijkstra tar kanten 9 direkt.
+MST minimerar \emph{summan över trädet}, inte avståndet från $a$.
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{graf, rot, köstruktur}{nyckeln: kantvikt eller avstånd}{vad som minimeras}
+\end{frame}
+
+\begin{frame}{Vad beror MST på? Ändra vikterna}
+\begin{columns}[T]
+\begin{column}{0.68\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{0.27\linewidth}p{0.13\linewidth}p{0.52\linewidth}@{}}
+\toprule
+\textbf{Ändring} & \textbf{MST} & \textbf{Kortaste-vägträd från $a$}\\
+\midrule
+$w\mapsto w^2$ & samma & \textbf{ändras}: $b$ nås nu via $e$ ($78<81$)\\
+$w\mapsto w-5$ & samma & \textbf{odefinierat}: fram och tillbaka på en negativ kant\\
+$w\mapsto w+c$ & samma & kan ändras: straffar stigar med många kanter\\
+byt $5\leftrightarrow6$ på $b$--$d$, $d$--$g$ & \textbf{ändras} & samma (här)\\
+\bottomrule
+\end{tabular}
+\medskip
+
+\small
+Varje \emph{strikt växande} funktion av vikterna ger samma MST.
+Kruskal tittar ju bara på den sorterade ordningen.
+\end{column}
+\begin{column}{0.29\textwidth}
+\centering
+{\scriptsize\bfseries\color{plum}$w^2$: nytt kortaste-vägträd}\par
+\input{gen/sq-spt}
+\end{column}
+\end{columns}
+\varstrip{Separation}{grafen}{vikterna}{MST beror på ordningen, kortaste väg på summorna}
+\end{frame}
+
+\begin{frame}{Är MST unikt?}
+\begin{columns}[T]
+\begin{column}{0.3\textwidth}
+\centering
+{\scriptsize\bfseries Om $d$--$g$ också väger 5 \dots}\par
+\input{gen/tie1}
+\end{column}
+\begin{column}{0.3\textwidth}
+\centering
+{\scriptsize\bfseries \dots\ finns två MST, båda 40}\par
+\input{gen/tie2}
+\end{column}
+\begin{column}{0.36\textwidth}
+\footnotesize
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Unika vikter $\Rightarrow$ exakt ett MST. (Bevis: cykelegenskapen.)
+  \item Lika vikter: flera MST kan finnas, men alla har samma \emph{vikt}.
+  \item Kruskal och Prim är fortfarande korrekta. Vilket träd de hittar beror på
+        hur lika nycklar bryts.
+\end{itemize}
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Prim och Kruskal gav olika träd, alltså har jag räknat fel.” Bara om vikterna är unika.
+\end{missbox}
+\varstrip{Generalisering}{algoritmerna}{vikterna, från unika till lika}{”minimalt” betyder minsta vikt, inte ett visst träd}
+\end{frame}
+
+\begin{frame}{Mitt i körningen: skog eller träd?}
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Kruskal, 4 kanter}\par
+\input{gen/skog}\par
+\footnotesize En \emph{skog}: $\{a,c\}$ och $\{b,e,g,h\}$ (och tre ensamma hörn).
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Prim, 4 kanter}\par
+\input{gen/trad}\par
+\footnotesize Ett \emph{träd}: $\{a,c,g,h,e\}$.
+\end{column}
+\begin{column}{0.3\textwidth}
+\footnotesize
+\textbf{Gemensam invariant:} de valda kanterna är en delmängd av något MST.\par\smallskip
+Invarianten är samma. Formen är olika. En tentafråga som visar ett mellantillstånd
+avslöjar direkt vilken algoritm som körts.
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{grafen, antal kanter}{algoritmen}{skog (Kruskal) mot sammanhängande träd (Prim)}
+\end{frame}

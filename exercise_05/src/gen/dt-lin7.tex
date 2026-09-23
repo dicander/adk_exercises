@@ -1,0 +1,42 @@
+\begin{tikzpicture}[scale=0.6,dn/.style={circle,draw=kthnavy,fill=white,line width=0.6pt,inner sep=0pt,minimum size=6.2mm,font=\scriptsize},
+  hit/.style={rectangle,draw=kthgreen,fill=kthmint,inner sep=0pt,minimum size=3.6mm,font=\tiny\bfseries},
+  ej/.style={rectangle,draw=black!35,fill=black!8,inner sep=0pt,minimum size=2.6mm},
+  te/.style={draw=black!45,line width=0.6pt},
+  tl/.style={font=\tiny,text=black!60,inner sep=0.5pt,fill=white}]
+  \node[dn] (n1) at (0.0,-0.0) {$a_1$};
+  \node[ej] (el1) at (-0.62,-0.72) {};
+  \node[hit] (h1) at (0.0,-0.72) {1};
+  \draw[te] (n1) -- (el1); \draw[te] (n1) -- (h1);
+  \node[dn] (n2) at (1.25,-0.72) {$a_2$};
+  \node[ej] (el2) at (0.63,-1.44) {};
+  \node[hit] (h2) at (1.25,-1.44) {2};
+  \draw[te] (n2) -- (el2); \draw[te] (n2) -- (h2);
+  \draw[te] (n1) -- (n2);
+  \node[dn] (n3) at (2.5,-1.44) {$a_3$};
+  \node[ej] (el3) at (1.88,-2.16) {};
+  \node[hit] (h3) at (2.5,-2.16) {3};
+  \draw[te] (n3) -- (el3); \draw[te] (n3) -- (h3);
+  \draw[te] (n2) -- (n3);
+  \node[dn] (n4) at (3.75,-2.16) {$a_4$};
+  \node[ej] (el4) at (3.13,-2.88) {};
+  \node[hit] (h4) at (3.75,-2.88) {4};
+  \draw[te] (n4) -- (el4); \draw[te] (n4) -- (h4);
+  \draw[te] (n3) -- (n4);
+  \node[dn] (n5) at (5.0,-2.88) {$a_5$};
+  \node[ej] (el5) at (4.38,-3.5999999999999996) {};
+  \node[hit] (h5) at (5.0,-3.5999999999999996) {5};
+  \draw[te] (n5) -- (el5); \draw[te] (n5) -- (h5);
+  \draw[te] (n4) -- (n5);
+  \node[dn] (n6) at (6.25,-3.5999999999999996) {$a_6$};
+  \node[ej] (el6) at (5.63,-4.319999999999999) {};
+  \node[hit] (h6) at (6.25,-4.319999999999999) {6};
+  \draw[te] (n6) -- (el6); \draw[te] (n6) -- (h6);
+  \draw[te] (n5) -- (n6);
+  \node[dn] (n7) at (7.5,-4.32) {$a_7$};
+  \node[ej] (el7) at (6.88,-5.04) {};
+  \node[hit] (h7) at (7.5,-5.04) {7};
+  \draw[te] (n7) -- (el7); \draw[te] (n7) -- (h7);
+  \draw[te] (n6) -- (n7);
+  \node[ej] (last) at (8.12,-5.04) {};
+  \draw[te] (n7) -- (last);
+\end{tikzpicture}

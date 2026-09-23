@@ -1,0 +1,224 @@
+% ======================================================================
+%  UPPGIFT 4: JULKLAPPSFÖRDELNING
+% ======================================================================
+\section{4 Julklappsfördelning}
+
+\uppgiftsbild{4}{Julklappsfördelning}
+{modellera en tilldelning som bipartit matchning, lösa den med flöde — och ange tiden i
+väldefinierade storheter.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Modellen: vad är hörn, kanter och kapaciteter — och varför just 1?
+  \item Girigt räcker inte: en förbättrande stig kan ta tillbaka det som redan delats ut.
+  \item Vad $m$ betyder avgör vad $O(\dots)$ blir.
+\end{itemize}}
+
+\begin{frame}{Uppgift 4: Julklappsfördelning}
+\begin{infobox}[fontupper=\footnotesize]
+En pappa ska ge sina $n$ barn var sin julklapp. Varje barn har skrivit en önskelista. Pappan vill
+ge varje barn en julklapp från barnets önskelista, men inte samma julklapp till flera barn.
+Konstruera och analysera en effektiv algoritm. Du kan anta att det finns högst $m$ saker på
+varje önskelista.
+\end{infobox}
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\small
+\textbf{Årets instans.} Tomten ska ge övningsassistenterna var sin klapp.\par\smallskip
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Emma & RTX 5090, PS5 Pro\\
+Elliot & RTX 5090, Xbox Series X\\
+Marcus & RTX 5090\\
+Lovisa & RTX 5090, PS5 Pro, Switch 2\\
+\bottomrule
+\end{tabular}\par\smallskip
+Alla vill ha Nvidia-kortet. Det finns ett.
+\end{column}
+\begin{column}{0.57\textwidth}
+\centering
+\input{gen/match-lists}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Första försöket: girigt}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\centering
+\input{gen/match-greedy}
+\end{column}
+\begin{column}{0.45\textwidth}
+\small
+I listordning, var och en tar första lediga sak:\par\smallskip
+Emma tar RTX-kortet. Elliot tar Xboxen. Marcus vill bara ha RTX-kortet, som är borta.
+Lovisa tar PS5:an.\par\smallskip
+Tre klappar. Marcus får ingenting.\par\smallskip
+{\footnotesize\color{black!55}(Marcus har gjort de här bilderna. Han har noterat utfallet.)}
+\end{column}
+\end{columns}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Ge var och en första lediga sak.” Resultatet beror på ordningen, och ett tidigt val kan
+behöva ångras.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+\textbf{Maximal} (går inte att utöka) $\neq$ \textbf{största} (flest par). Den giriga är maximal.
+Största har fyra par.
+\end{ahabox}
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{instansen}{algoritmen: girig eller flöde}{att ett lokalt val kan behöva ångras}
+\end{frame}
+
+\begin{frame}{Modellen: matchning som flöde}
+\begin{columns}[T]
+\begin{column}{0.54\textwidth}
+\centering
+\input{gen/match-net}\par
+{\scriptsize alla kapaciteter 1}
+\end{column}
+\begin{column}{0.43\textwidth}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item $s\to$ barn, kapacitet 1: ingen får två klappar.
+  \item barn $\to$ sak om saken står på listan.
+  \item sak $\to t$, kapacitet 1: ingen sak delas ut två gånger.
+  \item Heltalskapaciteter $\Rightarrow$ Ford--Fulkerson ger ett \emph{heltalsflöde}. Varje
+        kant bär 0 eller 1, och kanterna i mitten med flöde 1 är matchningen.
+  \item Maxflöde = största matchning.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\input{gen/match-walk}
+
+\begin{frame}{När räcker klapparna inte? Halls villkor}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+{\footnotesize\bfseries\color{plum}Om Emma också bara vill ha RTX-kortet}\par\smallskip
+\input{gen/match-hall}
+\end{column}
+\begin{column}{0.47\textwidth}
+\small
+Emma och Marcus önskar tillsammans en enda sak. Två personer, ett kort. Maxflödet blir 3.\par\smallskip
+Minsnittet bevisar det: $s\to$ Elliot, $s\to$ Lovisa, RTX $\to t$. Kapacitet 3.\par\smallskip
+Vill alla bara ha RTX-kortet blir maxflödet 1: minst tre besvikna övningsassistenter.
+\end{column}
+\end{columns}
+\vfill
+\begin{ahabox}
+\textbf{Halls sats:} alla kan få en klapp $\iff$ varje grupp $S$ av barn önskar tillsammans minst
+$|S|$ olika saker. Annars finns en grupp som bevisar det, och minsnittet hittar den.
+\end{ahabox}
+\varstrip{Separation}{algoritmen}{önskelistorna}{att minsnittet förklarar varför det inte går}
+\end{frame}
+
+\begin{frame}{Vad är $m$? Linjär i vad, igen}
+\small
+Varje varv i Ford--Fulkerson är en grafsökning: $O(|V|+|E|)$, linjärt i flödesgrafens storlek.
+Flödet ökar med 1 per varv och är högst $n$, så det blir högst $n$ varv.
+\medskip
+
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}Xll@{}}
+\toprule
+\textbf{Om $m$ betyder \dots} & \textbf{kanter i flödesgrafen} & \textbf{tid, $n$ varv}\\
+\midrule
+högst $m$ saker per lista (Viggo) & $O(nm)$ & $O(n^2m)$\\
+totala antalet rader i alla listor & $O(n+m)$ & $O(n(n+m))$\\
+antalet olika saker som finns & $O(nm)$ (högst $n$ listor à $m$) & $O(n^2m)$\\
+\bottomrule
+\end{tabularx}
+\medskip
+\begin{missbox}
+”$O(nm)$, för grafen har $O(nm)$ kanter.” Det är ett varv. Det blir upp till $n$ varv.
+\end{missbox}
+\varstrip{Separation}{algoritmen}{vad $m$ står för}{att en $O$-formel bara betyder något när variablerna är definierade}
+\end{frame}
+
+\begin{frame}{Vad betyder kapaciteterna? En i taget}
+\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}p{0.27\textwidth}Xc@{}}
+\toprule
+\textbf{Ändring} & \textbf{Betyder} & \textbf{Rätt modell?}\\
+\midrule
+$s\to$ barn: 2 & varje barn kan få två klappar & \ja{} (för en annan uppgift)\\
+sak $\to t$: $k$ & det finns $k$ exemplar av saken & \ja\\
+sak $\to t$: $\infty$ & obegränsat med exemplar: alla får RTX-kortet & \nej{} (Nvidia jublar)\\
+$s\to$ barn: $\infty$ & ett barn kan få allt på sin lista & \nej\\
+barn $\to$ sak: $\infty$ & ingen skillnad: 1:orna vid $s$ och $t$ begränsar redan & \ja\\
+\bottomrule
+\end{tabularx}
+\vfill
+\begin{missbox}
+”Alla kapaciteter måste vara 1.” Kanterna i mitten får vara vad som helst $\ge1$. Det är
+kanterna vid $s$ och $t$ som uttrycker villkoren.
+\end{missbox}
+\varstrip{Separation}{grafen}{en kapacitet i taget}{vilken kapacitet som uttrycker vilket villkor}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Samma sak utan flöde: alternerande stigar}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\small
+Den sista förbättrande stigen, utan $s$ och $t$:\par\smallskip
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lll@{}}
+Marcus -- RTX & ny & $+1$\\
+RTX -- Emma & bort & $-1$\\
+Emma -- PS5 & ny & $+1$\\
+PS5 -- Lovisa & bort & $-1$\\
+Lovisa -- Switch 2 & ny & $+1$\\
+\midrule
+& & $+1$ par\\
+\end{tabular}\par\smallskip
+\small
+Börjar och slutar i omatchade hörn, växlar ny/bort. Det är en förbättrande stig i
+flödesgrafen, sedd utan $s$ och $t$.
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Berge (1957):} en matchning är störst $\iff$ det inte finns någon alternerande stig
+mellan två omatchade hörn.
+\end{kaninbox}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Hopcroft--Karp (1973):} leta upp många kortaste alternerande stigar, disjunkta, i
+samma fas. $O(\sqrt{|V|})$ faser: $O(|E|\sqrt{|V|})$ i stället för $O(|V|\,|E|)$.
+\end{kaninbox}
+\end{column}
+\end{columns}
+\end{frame}}
+
+\begin{frame}{Vanliga fel i uppgift 4}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Girigt räcker.” Girigt ger en \emph{maximal} matchning. Här tre par, när fyra går.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Flödet kan ge Emma och Marcus ett halvt grafikkort var.” Heltalskapaciteter ger ett
+heltalsflöde. Ford--Fulkerson halverar inga grafikkort.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Tiden är $O(nm)$.” Ett varv är $O(nm)$. Det blir upp till $n$ varv: $O(n^2m)$.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Kapacitet $\infty$ på sak $\to t$, för säkerhets skull.” Då får alla samma sak.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{uppgiften}{modell och analys, rätt och nästan rätt}{girig/största, heltal, varv, kapaciteter}
+\end{frame}

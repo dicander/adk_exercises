@@ -1,0 +1,79 @@
+% ======================================================================
+%  INLEDNING
+% ======================================================================
+\section{Inledning}
+
+{\kthlogofalse
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[kthlight!55] (current page.north west) rectangle ([xshift=4.6cm]current page.south west);
+  \node at ([xshift=2.3cm,yshift=0.35cm]current page.west)
+     {\includegraphics[height=3.1cm]{KTH_logo_RGB_bla.png}};
+  \draw[kthsky,line width=1.2pt] ([xshift=4.6cm]current page.north west) -- ([xshift=4.6cm]current page.south west);
+  \node[anchor=west,align=left,text width=10cm] at ([xshift=5.3cm,yshift=0.55cm]current page.west) {%
+    {\small\color{kthblue}\textsc{DD2350 Algoritmer, datastrukturer och komplexitet}}\\[0.35cm]
+    {\fontsize{30}{32}\selectfont\bfseries\color{kthnavy}Övning 5}\\[0.25cm]
+    {\Large\color{kthnavy}Grafalgoritmer och undre gränser}\\[0.55cm]
+    {\normalsize Marcus \quad{\color{kthsky}|}\quad HT 2026}}; % TODO: namn/titel
+  \node[anchor=south west,align=left,text width=10.4cm,font=\tiny,text=black!50]
+    at ([xshift=5.3cm,yshift=0.45cm]current page.south west) {%
+    Uppgifter och lösningsidéer: Viggo Kann (2026-08-25). Lånade idéer ur tidigare
+    övningsbilder: Anton Grensjö (2017), Lisa Li (2019) och Alice.\\
+    Sandfärgade bilder med kanin \kaninikon{} är kaninhål: fördjupningar som går att hoppa över.};
+\end{tikzpicture}
+\end{frame}}
+
+\begin{frame}{Dagens program}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item Spännande träd \hfill{\scriptsize\color{black!55}Prim, Kruskal}
+  \item Förändrat flöde \hfill{\scriptsize\color{black!55}$\pm1$ på en kant}
+  \item Eulercykel \hfill{\scriptsize\color{black!55}linjär tid}
+  \item Julklappsfördelning \hfill{\scriptsize\color{black!55}matchning}
+  \item Undre gräns för sökning \hfill{\scriptsize\color{black!55}beslutsträd}
+  \item Laga julgransbelysning \hfill{\scriptsize\color{black!55}motståndare}
+\end{enumerate}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{infobox}[fontupper=\footnotesize]
+\textbf{Tre sorters bilder}\par\smallskip
+\textcolor{kthblue}{\rule[0.2ex]{1.2em}{1.2ex}}\ Lösningar och exempel\par
+\textcolor{sand!90!bark}{\rule[0.2ex]{1.2em}{1.2ex}}\ \kaninikon\ Kaninhål (valfria)\par
+\textcolor{brick}{\rule[0.2ex]{1.2em}{1.2ex}}\ \varningikon\ Vanliga missuppfattningar\par
+\textcolor{kthgreen}{\rule[0.2ex]{1.2em}{1.2ex}}\ \vtag{Kontrast}\ Variationsmönster
+\end{infobox}
+\end{column}
+\end{columns}
+\vfill
+{\small Övningen gräver ner sig i alla kaninhål. Kaninhålen ligger på egna bilder,
+så den som har bråttom kan hoppa över dem. Den som inte har bråttom kan också det.}
+\vskip0.2cm
+\end{frame}
+
+\begin{frame}{Om upplägget: variationsteori}
+\small
+\textbf{Idé (Marton):} man urskiljer en aspekt av något först när man upplever att
+den \emph{varierar} medan annat hålls fast. Den som bara sett röda bollar vet inte att
+bollar har färg.
+\medskip
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{Lärandeobjekt:} det vi vill att ni ska kunna.
+  \item \textbf{Kritiska aspekter:} det man måste urskilja för att kunna det.
+  \item Varje uppgift börjar med en bild som säger vilka aspekter vi varierar.
+\end{itemize}
+\end{column}
+\begin{column}{0.49\textwidth}
+\footnotesize
+\begin{tabular}{@{}l@{\ }p{0.72\linewidth}@{}}
+\vtag{Kontrast} & Visa vad det \emph{inte} är (Prim vs Dijkstra).\\[2pt]
+\vtag{Separation} & Variera en aspekt, håll resten fast.\\[2pt]
+\vtag{Generalisering} & Håll aspekten fast, variera resten.\\[2pt]
+\vtag{Fusion} & Variera flera aspekter samtidigt.
+\end{tabular}
+\end{column}
+\end{columns}
+\varstrip{Exempel}{grafen}{algoritmen (Prim/Dijkstra)}{att ”girig från en rot” inte säger vad nyckeln är}
+\end{frame}

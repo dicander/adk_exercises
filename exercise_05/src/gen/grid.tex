@@ -1,0 +1,65 @@
+\begin{frame}{Övre och undre gräns är inte bästa och värsta fall}
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,
+  hd/.style={font=\small\bfseries,text=kthnavy,align=center},
+  rl/.style={font=\small,align=left,anchor=west},
+  cell/.style={draw=black!25,minimum width=30.5mm,minimum height=9.2mm,inner sep=0pt},
+  big/.style={font=\normalsize},
+  loose/.style={font=\scriptsize,text=black!50}]
+  \useasboundingbox (-0.05,0.55) rectangle (11.95,-3.95);
+  \node[hd] at (4.05,0) {bästa fallet\\[-1pt]{\footnotesize\mdseries $T_{\min}(n)$}};
+  \node[hd] at (7.2,0) {medelfallet\\[-1pt]{\footnotesize\mdseries $T_{\mathrm{medel}}(n)$}};
+  \node[hd] at (10.35,0) {värsta fallet\\[-1pt]{\footnotesize\mdseries $T_{\max}(n)$}};
+  \node[rl] at (0,-0.95) {$O$\ \ övre gräns};
+  \node[rl] at (0,-1.95) {$\Omega$\ \ undre gräns};
+  \node[rl] at (0,-2.95) {$\Theta$\ \ båda};
+  \node[cell] at (4.05,-0.95) {};
+  \node[cell] at (4.05,-1.95) {};
+  \node[cell] at (4.05,-2.95) {};
+  \node[cell] at (7.2,-0.95) {};
+  \node[cell] at (7.2,-1.95) {};
+  \node[cell] at (7.2,-2.95) {};
+  \node[cell] at (10.35,-0.95) {};
+  \node[cell] at (10.35,-1.95) {};
+  \node[cell] at (10.35,-2.95) {};
+  \node[cell,fill=coral!25,visible on=<1>] at (10.35,-0.95) {\small $O$ = värsta};
+  \node[cell,fill=coral!25,visible on=<1>] at (7.2,-2.95) {\small $\Theta$ = medel};
+  \node[cell,fill=coral!25,visible on=<1>] at (4.05,-1.95) {\small $\Omega$ = bästa};
+  \node[rotate=12,draw=brick,line width=2pt,text=brick,rounded corners=3pt,font=\Huge\bfseries,inner sep=4pt,fill=white,fill opacity=0.85,text opacity=1,visible on=<1>] at (7.2,-1.95) {Nej.};
+  \node[cell,fill=lampyellow!45,draw=kthorange,line width=1pt,visible on=<2->] at (4.05,-0.95) {};
+  \node[big,visible on=<2>] at (4.05,-0.95) {$O(n)$};
+  \node[big,visible on=<3>] at (4.05,-0.8099999999999999) {$O(n)$};
+  \node[loose,visible on=<3>] at (4.05,-1.19) {också $O(n^2)$, $O(n^3)$};
+  \node[big,visible on=<2>] at (7.2,-0.95) {$O(n^2)$};
+  \node[big,visible on=<3>] at (7.2,-0.8099999999999999) {$O(n^2)$};
+  \node[loose,visible on=<3>] at (7.2,-1.19) {också $O(n^3)$};
+  \node[big,visible on=<2>] at (10.35,-0.95) {$O(n^2)$};
+  \node[big,visible on=<3>] at (10.35,-0.8099999999999999) {$O(n^2)$};
+  \node[loose,visible on=<3>] at (10.35,-1.19) {också $O(n^3)$, $O(2^n)$};
+  \node[big,visible on=<2>] at (4.05,-1.95) {$\Omega(n)$};
+  \node[big,visible on=<3>] at (4.05,-1.81) {$\Omega(n)$};
+  \node[loose,visible on=<3>] at (4.05,-2.19) {också $\Omega(1)$};
+  \node[big,visible on=<2>] at (7.2,-1.95) {$\Omega(n^2)$};
+  \node[big,visible on=<3>] at (7.2,-1.81) {$\Omega(n^2)$};
+  \node[loose,visible on=<3>] at (7.2,-2.19) {också $\Omega(n)$};
+  \node[cell,fill=lampyellow!45,draw=kthorange,line width=1pt,visible on=<2->] at (10.35,-1.95) {};
+  \node[big,visible on=<2>] at (10.35,-1.95) {$\Omega(n^2)$};
+  \node[big,visible on=<3>] at (10.35,-1.81) {$\Omega(n^2)$};
+  \node[loose,visible on=<3>] at (10.35,-2.19) {också $\Omega(n\log n)$};
+  \node[big,visible on=<2>] at (4.05,-2.95) {$\Theta(n)$};
+  \node[big,visible on=<3>] at (4.05,-2.81) {$\Theta(n)$};
+  \node[loose,visible on=<3>] at (4.05,-3.1900000000000004) {bara den klassen};
+  \node[big,visible on=<2>] at (7.2,-2.95) {$\Theta(n^2)$};
+  \node[big,visible on=<3>] at (7.2,-2.81) {$\Theta(n^2)$};
+  \node[loose,visible on=<3>] at (7.2,-3.1900000000000004) {bara den klassen};
+  \node[big,visible on=<2>] at (10.35,-2.95) {$\Theta(n^2)$};
+  \node[big,visible on=<3>] at (10.35,-2.81) {$\Theta(n^2)$};
+  \node[loose,visible on=<3>] at (10.35,-3.1900000000000004) {bara den klassen};
+  \node[visible on=<2->,font=\footnotesize\bfseries,text=kthorange] at (4.05,-3.68) {\raisebox{0.1ex}{$\blacktriangle$} Bästa fallet har ett ordo};
+  \node[visible on=<2->,font=\footnotesize\bfseries,text=kthorange] at (10.35,-3.68) {\raisebox{0.1ex}{$\blacktriangle$} Värsta fallet har ett $\Omega$};
+\end{tikzpicture}
+\vfill
+\begin{tcolorbox}[enhanced,halign=left,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=1.25cm,valign=center]
+\only<1>{En vanlig bild: tre synonymer. $O$ betyder värsta fallet, $\Omega$ bästa, $\Theta$ medel. Den är fel, och den gör resten av kursen svårare än den behöver vara.}\only<2>{Insättningssortering, alla nio rutor. \textbf{Fallet} väljer \emph{vilken funktion} vi pratar om. $O$, $\Omega$, $\Theta$ säger hur \emph{den} växer: uppåt begränsad, nedåt begränsad, eller båda.}\only<3>{$O$ och $\Omega$ får vara lösa och fortfarande sanna. $\Theta$ får inte det. ”Värsta fallet är $O(2^n)$” är sant — och helt ointressant.}
+\end{tcolorbox}
+\end{frame}

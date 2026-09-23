@@ -1,0 +1,287 @@
+% ======================================================================
+%  UPPGIFT 5: UNDRE GRÄNS FÖR SÖKNING
+% ======================================================================
+\section{5 Undre gränser}
+
+\uppgiftsbild{5}{Undre gräns för sökning i sorterad array}
+{bevisa en undre gräns för ett \emph{problem} — och hålla isär den från gränser för algoritmer
+och från bästa och värsta fall.}
+{\begin{itemize}\setlength{\itemsep}{1pt}
+  \item Gränsens riktning ($O$, $\Omega$, $\Theta$) och fallet (bästa, medel, värsta) är två
+        olika saker.
+  \item Algoritm eller problem: $\exists A\,\forall x$ mot $\forall A\,\exists x$.
+  \item Beslutsträdet: löven är möjliga svar, höjden är värsta fallet.
+\end{itemize}}
+
+\input{gen/grid}
+
+\begin{frame}{Tre funktioner, inte en}
+\begin{columns}[T]
+\begin{column}{0.53\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Insättningssortering: jämförelser}\par\smallskip
+\input{gen/kurvor}
+\end{column}
+\begin{column}{0.44\textwidth}
+\footnotesize
+För varje $n$ finns $n!$ indata (grå staplar). Varje \emph{fall} plockar ut en funktion av $n$:
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item $T_{\min}(n)=n-1$: snabbaste indatat (redan sorterat).
+  \item $T_{\max}(n)=\binom n2$: långsammaste (omvänt sorterat).
+  \item $T_{\mathrm{medel}}(n)\approx n^2/4$: genomsnittet över alla ordningar.
+\end{itemize}
+Sedan beskriver $O$, $\Omega$ och $\Theta$ \emph{den} funktionen.
+\end{column}
+\end{columns}
+\vfill
+\begin{ahabox}
+”Värsta fallet är $\Omega(n^2)$” och ”bästa fallet är $O(n)$” är helt vanliga, sanna meningar.
+\end{ahabox}
+\varstrip{Separation}{algoritmen}{fallet}{att fallet väljer funktionen och $O$/$\Omega$ begränsar den}
+\end{frame}
+
+\begin{frame}{En tredje axel: algoritm eller problem?}
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}XX@{}}
+\toprule
+& \textbf{Övre gräns} & \textbf{Undre gräns}\\
+\midrule
+\textbf{Algoritm $A$} & $A$ tar högst $f(n)$ på \emph{varje} indata av storlek $n$.\newline
+  \textcolor{black!60}{Binärsökning: $O(\log n)$.} &
+  \emph{Något} indata får $A$ att ta minst $g(n)$.\newline
+  \textcolor{black!60}{Linjärsökning: $\Omega(n)$ i värsta fallet.}\\
+\textbf{Problem $P$} & \emph{Det finns} en algoritm som klarar $f(n)$: $\exists A\ \forall x$.\newline
+  \textcolor{black!60}{Sökning: $O(\log n)$, tack vare binärsökning.} &
+  \emph{Varje} algoritm har ett indata som kostar $g(n)$: $\forall A\ \exists x$.\newline
+  \textcolor{black!60}{Sökning: $\Omega(\log n)$ — uppgift 5.}\\
+\bottomrule
+\end{tabularx}
+\medskip
+
+\small
+Möts gränserna är problemet $\Theta(\log n)$ och binärsökning optimal. En undre gräns för
+problemet måste gälla även algoritmer som ingen har skrivit än.
+\vfill
+\begin{missbox}
+”Linjärsökning tar $n$ steg, alltså är sökning $\Omega(n)$.” En gräns för en dålig
+algoritm, inte för problemet.
+\end{missbox}
+\varstrip{Separation}{sökning i sorterad array}{algoritm eller problem}{kvantorerna $\exists A$ och $\forall A$}
+\end{frame}
+
+\begin{frame}{Uppgift 5: Undre gräns för sökning i sorterad array}
+\begin{infobox}
+Binärsökning i en sorterad array med $n$ tal tar som bekant tiden $O(\log n)$. Bevisa att
+$\Omega(\log n)$ också är en undre gräns för antalet jämförelser som krävs för detta problem
+(i värsta fallet).
+\end{infobox}
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\small
+\textbf{Modell:} algoritmen får bara jämföra $x$ med arrayelement: $x<a_i$, $x=a_i$ eller
+$x>a_i$. Varje jämförelse kostar 1, allt annat är gratis.\par\smallskip
+\textbf{Beslutsträd:} en inre nod per jämförelse, ett löv per svar. En körning är en stig från
+roten till ett löv. Värsta fallet är trädets höjd.
+\end{column}
+\begin{column}{0.53\textwidth}
+\centering
+{\footnotesize\bfseries\color{kthnavy}Binärsökningens träd, $n=7$}\par\smallskip
+\input{gen/dt-bin7-s}\par
+{\scriptsize\textcolor{kthgreen}{gröna löv}: hittad på plats $i$\quad
+\textcolor{black!50}{grå löv}: finns inte}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Beviset: räkna löven}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\small
+\begin{enumerate}\setlength{\itemsep}{3pt}
+  \item Möjliga svar: ”$x=a_i$” för $i=1,\dots,n$, eller ”finns inte”. Minst $n+1$ olika svar,
+        alltså minst $n+1$ löv.
+  \item Varje inre nod har högst 3 barn. Ett träd med höjd $h$ har högst $3^h$ löv.
+  \item $3^h\ge n+1\ \Rightarrow\ h\ge\log_3(n+1)=\Omega(\log n)$.
+\end{enumerate}
+\medskip
+Det gäller \emph{varje} beslutsträd, alltså varje jämförelsebaserad algoritm. Ingen balans
+behöver antas.
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+\textbf{Skarpare:} svaret ”$x=a_i$” kräver en nod som jämför med $a_i$ och får $=$.
+Alltså minst $n$ inre noder. Utan $=$-löven är det ett binärträd med minst $n$ noder, och
+dess höjd är minst $\lceil\log_2(n+1)\rceil$.\par\smallskip
+Binärsökning gör exakt så många jämförelser. Den är optimal — inte bara asymptotiskt.
+\end{ahabox}
+\end{column}
+\end{columns}
+\vfill
+\varstrip{Generalisering}{argumentet: räkna svar, jämför med höjd}{algoritmen}{att gränsen gäller alla träd på en gång}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Samma bevis, berättat som en motståndare}
+\small
+Motståndaren bestämmer inte arrayen i förväg. Den håller reda på vilka utfall som fortfarande
+är möjliga: $n$ träffar och $n+1$ luckor, $2n+1$ stycken.
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item Vid varje jämförelse $x$ mot $a_i$ svarar den $<$ eller $>$, åt det håll där flest
+        utfall finns kvar. Aldrig $=$ så länge den kan undvika det.
+  \item Från $m$ möjliga utfall finns minst $(m-1)/2$ kvar efter frågan.
+  \item Algoritmen kan inte svara förrän ett enda utfall återstår. Räkningen ger
+        $2^k\ge n+1$, alltså minst $\lceil\log_2(n+1)\rceil$ jämförelser.
+\end{itemize}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Motståndaren \emph{är} beslutsträdet: den väljer den längsta stigen genom algoritmens träd. Samma
+argument, två berättelser. Uppgift 6 använder den andra.
+\end{kaninbox}
+\varstrip{Fusion}{påståendet $\Omega(\log n)$}{bevistekniken: räkna löv eller spela motståndare}{att en motståndare är den värsta stigen i trädet}
+\end{frame}}
+
+\begin{frame}{Beslutsträd är inte rekursionsträd}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Beslutsträd (binärsökning)}\par\smallskip
+\input{gen/dt-bin7-s}\par\smallskip
+\footnotesize En körning = \emph{en stig}. Värsta fallet = höjden.
+\end{column}
+\begin{column}{0.49\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Rekursionsträd (mergesort, $n=8$)}\par\smallskip
+\begin{tikzpicture}[x=0.52cm,y=0.62cm,
+  rb/.style={draw=kthblue,fill=kthlight,rounded corners=1.5pt,inner sep=1.5pt,font=\tiny,minimum height=3.2mm}]
+  \node[rb,minimum width=30mm] (r) at (3.5,0) {8};
+  \foreach \i in {0,1} \node[rb,minimum width=14mm] (a\i) at (1.5+4*\i,-1) {4};
+  \foreach \i in {0,...,3} \node[rb,minimum width=6mm] (b\i) at (0.5+2*\i,-2) {2};
+  \foreach \i in {0,...,7} \node[rb,minimum width=2.5mm] (c\i) at (\i,-3) {1};
+  \foreach \i in {0,1} \draw[black!45] (r) -- (a\i);
+  \foreach \i in {0,...,3} {\pgfmathtruncatemacro{\p}{\i/2}\draw[black!45] (a\p) -- (b\i);}
+  \foreach \i in {0,...,7} {\pgfmathtruncatemacro{\p}{\i/2}\draw[black!45] (b\p) -- (c\i);}
+\end{tikzpicture}\par\smallskip
+\footnotesize En körning = \emph{hela trädet}. Tid = summan.
+\end{column}
+\end{columns}
+\vfill
+\begin{missbox}
+”Binärsökningens rekursion har djup $\log n$, alltså är $\Omega(\log n)$ bevisat.” Det säger vad
+\emph{binärsökning} gör, inte vad alla algoritmer måste göra.
+\end{missbox}
+\varstrip{Kontrast}{”träd som beskriver en algoritm”}{vad en körning är: stig eller hela trädet}{att beslutsträdet beskriver alla körningar}
+\end{frame}
+
+\begin{frame}{Två algoritmer, två träd, lika många löv}
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Linjärsökning: höjd 7}\par\smallskip
+\input{gen/dt-lin7}
+\end{column}
+\begin{column}{0.57\textwidth}
+\centering
+{\small\bfseries\color{kthnavy}Binärsökning: höjd 3}\par\smallskip
+\input{gen/dt-bin7}
+\end{column}
+\end{columns}
+\vfill
+\small
+Båda har $7$ gröna och $8$ grå löv. Gränsen säger inte att alla träd är balanserade. Den säger
+att \emph{inget} träd med så många löv kan vara lägre än $\lceil\log_2 8\rceil=3$.
+\varstrip{Generalisering}{problemet och antalet löv}{algoritmen, alltså trädets form}{att den undre gränsen gäller varje form}
+\end{frame}
+
+\begin{frame}{Fyra verktyg för undre gränser}
+\begin{columns}[T]
+\begin{column}{0.68\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{@{}p{0.2\linewidth}Xp{0.27\linewidth}@{}}
+\toprule
+\textbf{Verktyg} & \textbf{Idé} & \textbf{Idag}\\
+\midrule
+Läsa och skriva & Svaret har storlek $s$ $\Rightarrow$ $\Omega(s)$ & Euler: $\Omega(|E|)$\\
+Beslutsträd & $L$ möjliga svar $\Rightarrow$ höjd $\ge\log L$ & Uppgift 5; sortering\\
+Motståndare & Svara elakt men konsekvent & Uppgift 5 igen; uppgift 6\\
+Reduktion & Löser du $B$ snabbt, löser du $A$ snabbt & Sortering $\to$ konvext hölje\\
+\bottomrule
+\end{tabularx}
+\end{column}
+\begin{column}{0.29\textwidth}
+\centering
+\input{gen/hull}\par
+\scriptsize Sortera $x_1,\dots,x_n$: beräkna konvexa höljet av punkterna $(x_i,x_i^2)$. Höljet
+går igenom dem i sorterad ordning.
+\end{column}
+\end{columns}
+\vfill
+\begin{ahabox}
+Reduktionen går \emph{från} det kända problemet \emph{till} det nya: om konvexa höljet gick
+snabbare än $\Omega(n\log n)$ skulle sortering också göra det.
+\end{ahabox}
+\end{frame}
+
+{\kaninbg
+\begin{frame}{\kh Sortering: $n!$ löv}
+\small
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item En jämförelsebaserad sortering måste kunna ge var och en av de $n!$ ordningarna som svar.
+  \item Jämförelsen $a_i<a_j$ har två utfall. Ett binärt träd med höjd $h$ har högst $2^h$ löv.
+  \item $2^h\ge n!\ \Rightarrow\ h\ge\log_2 n!\ \ge\ \frac n2\log_2\frac n2=\Omega(n\log n)$,
+        eftersom $n!$ har minst $n/2$ faktorer som är $\ge n/2$.
+  \item Mergesort klarar $O(n\log n)$. Problemet är alltså $\Theta(n\log n)$.
+\end{itemize}
+\vfill
+\begin{kaninbox}[fontupper=\footnotesize]
+Samma recept som i uppgift 5, fler löv. För $n=7$: $\lceil\log_2 5040\rceil=13$ jämförelser
+krävs i värsta fallet. Det finns algoritmer som klarar sig med exakt 13, men ingen känd
+formel för det bästa antalet i allmänhet.
+\end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Modellen spelar roll}
+\small
+Undre gränsen gäller algoritmer som bara \emph{jämför}. Den som räknar med nycklarna har inte
+lovat något:
+\begin{itemize}\setlength{\itemsep}{3pt}
+  \item \textbf{Interpolationssökning} gissar var $x$ borde ligga utifrån värdet. Jämnt
+        fördelade nycklar: $O(\log\log n)$ i medel. Värsta fallet är fortfarande $\Theta(n)$.
+  \item \textbf{Hashning}: $O(1)$ förväntat. Behöver inte ens sorterad ordning.
+  \item \textbf{Räknesortering, radixsortering}: $O(n+k)$. ”Sortering är $\Omega(n\log n)$”
+        gäller jämförelser.
+\end{itemize}
+\vfill
+\begin{missbox}[fontupper=\footnotesize]
+”Hashning motbevisar uppgift 5.” Nej: uppgift 5 handlar om jämförelser. En undre gräns är
+alltid en gräns \emph{i en modell}.
+\end{missbox}
+\varstrip{Kontrast}{problemet: hitta $x$}{beräkningsmodellen}{att en undre gräns bara gäller i sin modell}
+\end{frame}}
+
+\begin{frame}{Vanliga fel i uppgift 5}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Trädet har $n$ löv.” Svaret ”finns inte” är också ett svar: minst $n+1$.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Höjden är $O(\log n)$.” Det gäller binärsökningens träd. Beviset behöver att \emph{varje}
+träd har höjd $\Omega(\log n)$.
+\end{missbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Trädet är balanserat, så höjden är $\log n$.” Balans får man inte anta: trädet tillhör en
+okänd algoritm. Ett träd med $L$ löv har höjd $\ge\log L$ ändå.
+\end{missbox}
+\begin{missbox}[fontupper=\footnotesize]
+”Jag hittade ett indata där min algoritm är långsam.” Det är en undre gräns för \emph{din}
+algoritm. Problemet kräver $\forall A$.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Kontrast}{uppgiften}{beviset, rätt och nästan rätt}{löv, riktning, balans, kvantor}
+\end{frame}

@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=0.72]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[aug] (s) to[bend left=20] node[fl,text=kthgrass,font=\scriptsize\bfseries] {1} (a);
+  \draw[resb] (a) to[bend left=20] node[fl] {2} (s);
+  \draw[aug] (b) -- node[fl,text=kthgrass,font=\scriptsize\bfseries] {6} (s);
+  \draw[resb] (t) -- node[fl] {1} (a);
+  \draw[resb] (c) -- node[fl] {2} (a);
+  \draw[resb] (c) -- node[fl] {5} (b);
+  \draw[resb] (t) -- node[fl] {7} (c);
+\end{tikzpicture}

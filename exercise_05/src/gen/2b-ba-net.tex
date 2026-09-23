@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.72]
+\useasboundingbox (-0.45,-0.5) rectangle (5.85,3.3);
+  \node[fn] (s) at (0,1.4) {$s$};
+  \node[fn] (a) at (2.6,2.8) {$a$};
+  \node[fn] (b) at (1.6,0) {$b$};
+  \node[fn] (c) at (3.9,0) {$c$};
+  \node[fn] (t) at (5.4,1.4) {$t$};
+  \draw[fe] (s) -- node[fl] {2/3} (a);
+  \draw[sat] (s) -- node[fl] {6/6} (b);
+  \draw[->,draw=black!25,dashed] (b) -- node[fl] {0/0} (a);
+  \draw[sat] (a) -- node[fl] {1/1} (t);
+  \draw[sat] (a) -- node[fl] {2/2} (c);
+  \draw[sat] (b) -- node[fl] {5/5} (c);
+  \draw[sat] (c) -- node[fl] {7/7} (t);
+  \node[font=\scriptsize\bfseries,text=brick,left=1pt of b] {$+1$};
+  \node[font=\scriptsize\bfseries,text=brick] at (2.05,3.05) {$-1$};
+\end{tikzpicture}

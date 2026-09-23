@@ -1,0 +1,43 @@
+% ======================================================================
+%  AVSLUTNING
+% ======================================================================
+\section{Sammanfattning}
+
+\begin{frame}{Det vi varierade}
+\footnotesize
+\renewcommand{\arraystretch}{1.16}
+\begin{tabularx}{\textwidth}{@{}p{0.2\textwidth}p{0.28\textwidth}X@{}}
+\toprule
+\textbf{Uppgift} & \textbf{Kritisk aspekt} & \textbf{Det man ska kunna se}\\
+\midrule
+1 Spännande träd & kandidatmängden & Krusk\textbf{AL} är glob\textbf{AL}; Prim tittar bara ut ur trädet\\
+2 Förändrat flöde & kanten och minsnitten & $+1$ hjälper om kanten är i \emph{alla} minsnitt, $-1$ stjälper om den är i \emph{något}\\
+3 Eulercykel & datastrukturen & linjärt i $|V|+|E|$ kräver delade kanter och pekare per hörn\\
+4 Julklappar & modellen och $m$ & girigt ger maximal, flöde ger största; $O(\dots)$ kräver definierade variabler\\
+5 Sökning & fall mot gräns, algoritm mot problem & bästa fallet har ett ordo; undre gränser gäller alla algoritmer\\
+6 Lampor & kostnadsmåttet & exakt $2n-1$, för varje algoritm\\
+\bottomrule
+\end{tabularx}
+\vfill
+\begin{ahabox}
+Den återkommande frågan: \textbf{linjär i vad?} $|V|+|E|$, $|V|^2$, $n$, antal byten — eller ett
+tal i indata, och då är det inte linjärt alls.
+\end{ahabox}
+\end{frame}
+
+{\kthlogofalse
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[kthlight!55] (current page.north west) rectangle ([xshift=4.6cm]current page.south west);
+  \node at ([xshift=2.3cm,yshift=0.35cm]current page.west)
+     {\includegraphics[height=3.1cm]{KTH_logo_RGB_bla.png}};
+  \draw[kthsky,line width=1.2pt] ([xshift=4.6cm]current page.north west) -- ([xshift=4.6cm]current page.south west);
+  \node[anchor=west,align=left] at ([xshift=5.3cm,yshift=0.4cm]current page.west) {%
+    {\fontsize{36}{38}\selectfont\bfseries\color{kthnavy}Frågor?}\\[0.35cm]
+    {\large\color{black!60}(Undre gräns: 0.)}};
+  \node[anchor=south west,align=left,text width=10.4cm,font=\tiny,text=black!50]
+    at ([xshift=5.3cm,yshift=0.45cm]current page.south west) {%
+    DD2350 ADK, övning 5. Uppgifter och lösningsidéer: Viggo Kann. Idéer lånade från Anton
+    Grensjö, Lisa Li och Alice.};
+\end{tikzpicture}
+\end{frame}}

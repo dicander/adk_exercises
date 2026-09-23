@@ -1,0 +1,101 @@
+\begin{frame}{Kruskal på uppgiftens graf}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.76]
+  \node[gv,onslide=<2-7>{comp1},onslide=<8->{comp2}] (a) at (3.1,5.2) {$a$};
+  \node[gv,onslide=<3->{comp2}] (b) at (2.1,4.2) {$b$};
+  \node[gv,onslide=<2-7>{comp1},onslide=<8->{comp2}] (c) at (4.3,4.1) {$c$};
+  \node[gv,onslide=<6->{comp2}] (d) at (1.0,3.1) {$d$};
+  \node[gv,onslide=<3->{comp2}] (e) at (3.1,3.1) {$e$};
+  \node[gv,onslide=<11->{comp2}] (f) at (4.7,2.1) {$f$};
+  \node[gv,onslide=<5->{comp2}] (g) at (1.0,1.0) {$g$};
+  \node[gv,onslide=<4->{comp2}] (h) at (3.1,1.0) {$h$};
+  \node[gv,onslide=<9->{comp2}] (i) at (0.0,0.0) {$i$};
+  \begin{scope}[on background layer]
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<7>] (h) -- (g);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<7>] (e) -- (h);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<7>] (b) -- (e);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<7>] (d) -- (b);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<10>] (e) -- (b);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<10>] (h) -- (e);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<10>] (g) -- (h);
+  \draw[kthorange!55,line width=7pt,line cap=round,visible on=<10>] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. (g);
+  \draw[ge,onslide=<2>{nyss},onslide=<3->{mst}] (a) -- node[gw,above right]{1} (c);
+  \draw[ge,onslide=<3>{nyss},onslide=<4->{mst}] (b) -- node[gw,above right]{2} (e);
+  \draw[ge,onslide=<4>{nyss},onslide=<5->{mst}] (e) -- node[gw,left]{3} (h);
+  \draw[ge,onslide=<5>{nyss},onslide=<6->{mst}] (g) -- node[gw,below]{4} (h);
+  \draw[ge,onslide=<6>{nyss},onslide=<7->{mst}] (b) -- node[gw,above left]{5} (d);
+  \draw[ge,onslide=<7>{rejnu},onslide=<8->{rej}] (d) -- node[gw,right]{6} (g);
+  \draw[ge,onslide=<8>{nyss},onslide=<9->{mst}] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. node[gw,left,pos=0.5]{7} (g);
+  \draw[ge,onslide=<9>{nyss},onslide=<10->{mst}] (g) -- node[gw,above left]{8} (i);
+  \draw[ge,onslide=<10>{rejnu},onslide=<11->{rej}] (a) -- node[gw,above left]{9} (b);
+  \draw[ge,onslide=<11->{nyss}] (e) -- node[gw,above right]{10} (f);
+  \end{scope}
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{tikzpicture}[x=1cm,y=-0.40cm,font=\small]
+  \node[anchor=west,font=\footnotesize\bfseries,text=kthnavy] at (-0.35,-0.9) {Alla kanter, globalt sorterade};
+  \fill[kthorange!22,visible on=<2>] (-0.35,0-0.45) rectangle (5.6,0+0.45);
+  \node[visible on=<2>,text=kthorange] at (-0.18,0) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,0) {1};
+  \node[anchor=west] at (0.75,0) {$a$--$c$};
+  \node[anchor=west,visible on=<2->] at (1.75,0) {\ja};
+  \fill[kthorange!22,visible on=<3>] (-0.35,1-0.45) rectangle (5.6,1+0.45);
+  \node[visible on=<3>,text=kthorange] at (-0.18,1) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,1) {2};
+  \node[anchor=west] at (0.75,1) {$b$--$e$};
+  \node[anchor=west,visible on=<3->] at (1.75,1) {\ja};
+  \fill[kthorange!22,visible on=<4>] (-0.35,2-0.45) rectangle (5.6,2+0.45);
+  \node[visible on=<4>,text=kthorange] at (-0.18,2) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,2) {3};
+  \node[anchor=west] at (0.75,2) {$e$--$h$};
+  \node[anchor=west,visible on=<4->] at (1.75,2) {\ja};
+  \fill[kthorange!22,visible on=<5>] (-0.35,3-0.45) rectangle (5.6,3+0.45);
+  \node[visible on=<5>,text=kthorange] at (-0.18,3) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,3) {4};
+  \node[anchor=west] at (0.75,3) {$g$--$h$};
+  \node[anchor=west,visible on=<5->] at (1.75,3) {\ja};
+  \fill[kthorange!22,visible on=<6>] (-0.35,4-0.45) rectangle (5.6,4+0.45);
+  \node[visible on=<6>,text=kthorange] at (-0.18,4) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,4) {5};
+  \node[anchor=west] at (0.75,4) {$b$--$d$};
+  \node[anchor=west,visible on=<6->] at (1.75,4) {\ja};
+  \fill[kthorange!22,visible on=<7>] (-0.35,5-0.45) rectangle (5.6,5+0.45);
+  \node[visible on=<7>,text=kthorange] at (-0.18,5) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,5) {6};
+  \node[anchor=west] at (0.75,5) {$d$--$g$};
+  \node[anchor=west,visible on=<7->,font=\scriptsize,text=brick] at (1.75,5) {\nej\ samma komponent $\Rightarrow$ cykel};
+  \fill[kthorange!22,visible on=<8>] (-0.35,6-0.45) rectangle (5.6,6+0.45);
+  \node[visible on=<8>,text=kthorange] at (-0.18,6) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,6) {7};
+  \node[anchor=west] at (0.75,6) {$a$--$g$};
+  \node[anchor=west,visible on=<8->] at (1.75,6) {\ja};
+  \fill[kthorange!22,visible on=<9>] (-0.35,7-0.45) rectangle (5.6,7+0.45);
+  \node[visible on=<9>,text=kthorange] at (-0.18,7) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,7) {8};
+  \node[anchor=west] at (0.75,7) {$g$--$i$};
+  \node[anchor=west,visible on=<9->] at (1.75,7) {\ja};
+  \fill[kthorange!22,visible on=<10>] (-0.35,8-0.45) rectangle (5.6,8+0.45);
+  \node[visible on=<10>,text=kthorange] at (-0.18,8) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,8) {9};
+  \node[anchor=west] at (0.75,8) {$a$--$b$};
+  \node[anchor=west,visible on=<10->,font=\scriptsize,text=brick] at (1.75,8) {\nej\ samma komponent $\Rightarrow$ cykel};
+  \fill[kthorange!22,visible on=<11>] (-0.35,9-0.45) rectangle (5.6,9+0.45);
+  \node[visible on=<11>,text=kthorange] at (-0.18,9) {$\blacktriangleright$};
+  \node[anchor=east] at (0.55,9) {10};
+  \node[anchor=west] at (0.75,9) {$e$--$f$};
+  \node[anchor=west,visible on=<11->] at (1.75,9) {\ja};
+\end{tikzpicture}
+
+\vskip2pt
+{\footnotesize\color{kthblue}\only<1>{Komponenter: 9\quad Kanter i $T$: 0\quad Vikt: 0}\only<2>{Komponenter: 8\quad Kanter i $T$: 1\quad Vikt: 1}\only<3>{Komponenter: 7\quad Kanter i $T$: 2\quad Vikt: 3}\only<4>{Komponenter: 6\quad Kanter i $T$: 3\quad Vikt: 6}\only<5>{Komponenter: 5\quad Kanter i $T$: 4\quad Vikt: 10}\only<6>{Komponenter: 4\quad Kanter i $T$: 5\quad Vikt: 15}\only<7>{Komponenter: 4\quad Kanter i $T$: 5\quad Vikt: 15}\only<8>{Komponenter: 3\quad Kanter i $T$: 6\quad Vikt: 22}\only<9>{Komponenter: 2\quad Kanter i $T$: 7\quad Vikt: 30}\only<10>{Komponenter: 2\quad Kanter i $T$: 7\quad Vikt: 30}\only<11>{Komponenter: 1\quad Kanter i $T$: 8\quad Vikt: 40}}
+\end{column}
+\end{columns}
+\vfill
+\begin{tcolorbox}[enhanced,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,
+  left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=0.95cm,valign=center]
+\only<1>{Sortera \emph{alla} kanter. Varje hörn är en egen komponent.}\only<2>{$a$--$c$ förbinder två olika komponenter $\Rightarrow$ ta den.}\only<3>{$b$--$e$: på andra sidan grafen. Kruskal bryr sig inte om \emph{var} kanten är — bara att den är billigast \emph{globalt}.}\only<4>{$e$--$h$ $\Rightarrow$ ta den.}\only<5>{$g$--$h$ $\Rightarrow$ ta den.}\only<6>{$b$--$d$ $\Rightarrow$ ta den.}\only<7>{$d$--$g$: $d$ och $g$ hänger redan ihop via $d$--$b$--$e$--$h$--$g$. Kanten skulle sluta en cykel.}\only<8>{$a$--$g$ förenar $\{a,c\}$ med den stora komponenten.}\only<9>{$g$--$i$ $\Rightarrow$ ta den.}\only<10>{$a$--$b$: redan förbundna via $a$--$g$--$h$--$e$--$b$ $\Rightarrow$ cykel.}\only<11>{$e$--$f$ $\Rightarrow$ ta den. $|V|-1=8$ kanter, vikt $40$. Klart.}
+\end{tcolorbox}
+\end{frame}

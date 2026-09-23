@@ -1,0 +1,134 @@
+\begin{frame}{Prim på uppgiftens graf (rot $a$)}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.76]
+  \node[gv,onslide=<1>{draw=kthorange,line width=1.1pt},onslide=<2->{intree}] (a) at (3.1,5.2) {$a$};
+  \node[gv,onslide=<2-6>{draw=kthorange,line width=1.1pt},onslide=<7->{intree}] (b) at (2.1,4.2) {$b$};
+  \node[gv,onslide=<2>{draw=kthorange,line width=1.1pt},onslide=<3->{intree}] (c) at (4.3,4.1) {$c$};
+  \node[gv,onslide=<4-7>{draw=kthorange,line width=1.1pt},onslide=<8->{intree}] (d) at (1.0,3.1) {$d$};
+  \node[gv,onslide=<5>{draw=kthorange,line width=1.1pt},onslide=<6->{intree}] (e) at (3.1,3.1) {$e$};
+  \node[gv,onslide=<6-9>{draw=kthorange,line width=1.1pt},onslide=<10->{intree}] (f) at (4.7,2.1) {$f$};
+  \node[gv,onslide=<2-3>{draw=kthorange,line width=1.1pt},onslide=<4->{intree}] (g) at (1.0,1.0) {$g$};
+  \node[gv,onslide=<4>{draw=kthorange,line width=1.1pt},onslide=<5->{intree}] (h) at (3.1,1.0) {$h$};
+  \node[gv,onslide=<4-8>{draw=kthorange,line width=1.1pt},onslide=<9->{intree}] (i) at (0.0,0.0) {$i$};
+  \begin{scope}[on background layer]
+  \draw[ge,onslide=<2>{cand},onslide=<3>{nyss},onslide=<4->{mst}] (a) -- node[gw,above right]{1} (c);
+  \draw[ge,onslide=<6>{cand},onslide=<7>{nyss},onslide=<8->{mst}] (b) -- node[gw,above right]{2} (e);
+  \draw[ge,onslide=<5>{cand},onslide=<6>{nyss},onslide=<7->{mst}] (e) -- node[gw,left]{3} (h);
+  \draw[ge,onslide=<4>{cand},onslide=<5>{nyss},onslide=<6->{mst}] (g) -- node[gw,below]{4} (h);
+  \draw[ge,onslide=<7>{cand},onslide=<8>{nyss},onslide=<9->{mst}] (b) -- node[gw,above left]{5} (d);
+  \draw[ge,onslide=<4-6>{cand},onslide=<7->{faint}] (d) -- node[gw,right]{6} (g);
+  \draw[ge,onslide=<2-3>{cand},onslide=<4>{nyss},onslide=<5->{mst}] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. node[gw,left,pos=0.5]{7} (g);
+  \draw[ge,onslide=<4-8>{cand},onslide=<9>{nyss},onslide=<10->{mst}] (g) -- node[gw,above left]{8} (i);
+  \draw[ge,onslide=<2-5>{cand},onslide=<6->{faint}] (a) -- node[gw,above left]{9} (b);
+  \draw[ge,onslide=<6-9>{cand},onslide=<10->{nyss}] (e) -- node[gw,above right]{10} (f);
+  \end{scope}
+\end{tikzpicture}
+\end{column}
+\begin{column}{0.5\textwidth}
+{\footnotesize\bfseries\color{kthnavy}Prioritetskö $Q$ (nyckel = billigaste kant in i trädet)}\par\smallskip
+\footnotesize
+\only<1>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$a$ & $0$ & --\\
+\multicolumn{3}{@{}l}{\color{black!50}+ 8 hörn med nyckel $\infty$}\\
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: --}}
+\only<2>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$c$ & $1$ & $a$\ \textcolor{kthgrass}{(ny)}\\
+$g$ & $7$ & $a$\ \textcolor{kthgrass}{(ny)}\\
+$b$ & $9$ & $a$\ \textcolor{kthgrass}{(ny)}\\
+\multicolumn{3}{@{}l}{\color{black!50}+ 5 hörn med nyckel $\infty$}\\
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$}}
+\only<3>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$g$ & $7$ & $a$\\
+$b$ & $9$ & $a$\\
+\multicolumn{3}{@{}l}{\color{black!50}+ 5 hörn med nyckel $\infty$}\\
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$}}
+\only<4>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$h$ & $4$ & $g$\ \textcolor{kthgrass}{(ny)}\\
+$d$ & $6$ & $g$\ \textcolor{kthgrass}{(ny)}\\
+$i$ & $8$ & $g$\ \textcolor{kthgrass}{(ny)}\\
+$b$ & $9$ & $a$\\
+\multicolumn{3}{@{}l}{\color{black!50}+ 2 hörn med nyckel $\infty$}\\
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$}}
+\only<5>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$e$ & $3$ & $h$\ \textcolor{kthgrass}{(ny)}\\
+$d$ & $6$ & $g$\\
+$i$ & $8$ & $g$\\
+$b$ & $9$ & $a$\\
+\multicolumn{3}{@{}l}{\color{black!50}+ 1 hörn med nyckel $\infty$}\\
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$}}
+\only<6>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$b$ & $2$ & $e$\ \textcolor{brick}{(var 9)}\\
+$d$ & $6$ & $g$\\
+$i$ & $8$ & $g$\\
+$f$ & $10$ & $e$\ \textcolor{kthgrass}{(ny)}\\
+
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$, $e$}}
+\only<7>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$d$ & $5$ & $b$\ \textcolor{brick}{(var 6)}\\
+$i$ & $8$ & $g$\\
+$f$ & $10$ & $e$\\
+
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$, $e$, $b$}}
+\only<8>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$i$ & $8$ & $g$\\
+$f$ & $10$ & $e$\\
+
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$, $e$, $b$, $d$}}
+\only<9>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+$f$ & $10$ & $e$\\
+
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$, $e$, $b$, $d$, $i$}}
+\only<10>{%
+\begin{tabular}{@{}l@{\quad}r@{\quad}l@{}}
+\toprule hörn & key & $\pi$\\\midrule
+\multicolumn{3}{@{}l}{\color{black!50}(tom)}\\
+
+\bottomrule
+\end{tabular}\par\smallskip
+{\scriptsize\color{kthblue}Utplockade: $a$, $c$, $g$, $h$, $e$, $b$, $d$, $i$, $f$}}
+\end{column}
+\end{columns}
+\vfill
+\begin{tcolorbox}[enhanced,colback=kthlight!50,colframe=kthsky,boxrule=0.4pt,arc=2pt,
+  left=4pt,right=4pt,top=1pt,bottom=1pt,fontupper=\small,height=0.95cm,valign=center]
+\only<1>{Starta i $a$: $\mathit{key}[a]=0$, alla andra $\infty$. Alla hörn ligger i kön.}\only<2>{Plocka ut $a$. Grannarna får nycklar: $c$ (1), $g$ (7), $b$ (9).}\only<3>{Plocka ut $c$ (1). Inga nya grannar. Kön är lokal: bara kanter \emph{ut ur trädet} räknas.}\only<4>{Plocka ut $g$ (7). Nya nycklar: $h$ (4), $d$ (6), $i$ (8).}\only<5>{Plocka ut $h$ (4). Ny nyckel: $e$ (3).}\only<6>{Plocka ut $e$ (3). \textsc{Decrease-Key}: $b$ går från 9 till 2. Ny: $f$ (10).}\only<7>{Plocka ut $b$ (2). \textsc{Decrease-Key}: $d$ går från 6 till 5.}\only<8>{Plocka ut $d$ (5). Kanten $d$--$g$ (6) blev aldrig trädkant.}\only<9>{Plocka ut $i$ (8).}\only<10>{Plocka ut $f$ (10). Vikt $1+7+4+3+2+5+8+10=40$. Samma träd som Kruskal (unika vikter!).}
+\end{tcolorbox}
+\end{frame}

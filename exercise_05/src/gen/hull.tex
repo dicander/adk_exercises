@@ -1,0 +1,11 @@
+\begin{tikzpicture}[x=0.75cm,y=0.42cm]
+  \draw[->,black!50] (-2.3,0) -- (2.4,0) node[right,font=\tiny] {$x$};
+  \draw[->,black!50] (0,-0.2) -- (0,4.2) node[above,font=\tiny] {$x^2$};
+  \draw[black!25,domain=-2.0:2.05,samples=40] plot (\x,{\x*\x});
+  \draw[kthblue,line width=1pt] (-1.8,3.240) -- (-0.7,0.490) -- (0.4,0.160) -- (1.1,1.210) -- (1.9,3.610) -- cycle;
+  \fill[kthorange] (-1.8,3.240) circle (2pt);
+  \fill[kthorange] (-0.7,0.490) circle (2pt);
+  \fill[kthorange] (0.4,0.160) circle (2pt);
+  \fill[kthorange] (1.1,1.210) circle (2pt);
+  \fill[kthorange] (1.9,3.610) circle (2pt);
+\end{tikzpicture}

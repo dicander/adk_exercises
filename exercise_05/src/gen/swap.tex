@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=0.5,every node/.append style={font=\footnotesize}]
+  \node[gv] (a) at (3.1,5.2) {$a$};
+  \node[gv] (b) at (2.1,4.2) {$b$};
+  \node[gv] (c) at (4.3,4.1) {$c$};
+  \node[gv] (d) at (1.0,3.1) {$d$};
+  \node[gv] (e) at (3.1,3.1) {$e$};
+  \node[gv] (f) at (4.7,2.1) {$f$};
+  \node[gv] (g) at (1.0,1.0) {$g$};
+  \node[gv] (h) at (3.1,1.0) {$h$};
+  \node[gv] (i) at (0.0,0.0) {$i$};
+  \begin{scope}[on background layer]
+  \draw[mst] (a) -- node[gw,above right]{1} (c);
+  \draw[mst] (b) -- node[gw,above right]{2} (e);
+  \draw[mst] (e) -- node[gw,left]{3} (h);
+  \draw[mst] (g) -- node[gw,below]{4} (h);
+  \draw[faint] (b) -- node[gw,above left]{\textbf{\textcolor{brick}{6}}} (d);
+  \draw[mst] (d) -- node[gw,right]{\textbf{\textcolor{brick}{5}}} (g);
+  \draw[mst] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. node[gw,left,pos=0.5]{7} (g);
+  \draw[mst] (g) -- node[gw,above left]{8} (i);
+  \draw[faint] (a) -- node[gw,above left]{9} (b);
+  \draw[mst] (e) -- node[gw,above right]{10} (f);
+  \end{scope}
+\end{tikzpicture}

@@ -1,0 +1,214 @@
+% ======================================================================
+%  PAKET
+% ======================================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[swedish]{babel}
+\usepackage{lmodern}
+\usepackage[scaled=0.92]{helvet}
+\usefonttheme[onlymath]{serif}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,tabularx,multirow,array}
+\usepackage{pifont}
+\usepackage{xspace}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usetikzlibrary{babel,arrows.meta,positioning,calc,backgrounds,fit,
+  decorations.pathreplacing,decorations.pathmorphing,shapes.geometric,
+  shapes.misc,shapes.symbols,matrix,patterns,shadows}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage[noend]{algpseudocode}
+
+\hypersetup{pdftitle={DD2350 ADK – Övning 5: Grafalgoritmer och undre gränser},
+            pdfauthor={Marcus}}
+
+% ======================================================================
+%  TEMA  (fristående block — byt gärna mot DD1331-temat)
+% ======================================================================
+\definecolor{kthblue}{HTML}{004791}
+\definecolor{kthnavy}{HTML}{000061}
+\definecolor{kthsky}{HTML}{6298D2}
+\definecolor{kthlight}{HTML}{DEF0FF}
+\definecolor{kthgreen}{HTML}{0D4A21}
+\definecolor{kthgrass}{HTML}{4DA061}
+\definecolor{kthmint}{HTML}{C7EBBA}
+\definecolor{brick}{HTML}{9E1B32}
+\definecolor{coral}{HTML}{E86A58}
+\definecolor{sand}{HTML}{EFE6D8}
+\definecolor{bark}{HTML}{8C6239}
+\definecolor{kthorange}{HTML}{E07B00}
+\definecolor{lampyellow}{HTML}{FFCC33}
+\definecolor{plum}{HTML}{6E3A8C}
+
+\setbeamersize{text margin left=0.6cm,text margin right=0.6cm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=black!87}
+\setbeamercolor{structure}{fg=kthblue}
+\setbeamercolor{alerted text}{fg=brick}
+\setbeamercolor{frametitle}{fg=kthnavy}
+\setbeamercolor{title}{fg=kthnavy}
+\setbeamercolor{block title}{bg=kthblue,fg=white}
+\setbeamercolor{block body}{bg=kthlight!70}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\small}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamertemplate{itemize item}{\raisebox{0.12ex}{\color{kthblue}\scriptsize$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\color{kthsky}\textbf{--}}
+\setbeamertemplate{enumerate item}{\color{kthblue}\bfseries\insertenumlabel.}
+\setlength{\leftmargini}{1.2em}
+
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \vskip0.30cm
+  \begin{minipage}[t]{\dimexpr\textwidth-1.1cm\relax}%
+    \usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle
+    \ifx\insertframesubtitle\@empty\else
+      \par\vskip1pt{\usebeamerfont{framesubtitle}\color{kthblue}\insertframesubtitle}\fi
+  \end{minipage}\par
+  \vskip3pt
+  {\color{kthsky}\rule{\textwidth}{0.6pt}}%
+  \vskip-1pt}
+\makeatother
+
+\newif\ifkthlogo \kthlogotrue
+\setbeamertemplate{background}{%
+  \ifkthlogo
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,\paperheight);
+    \node[anchor=north east,inner sep=0pt] at (\paperwidth-0.28cm,\paperheight-0.2cm)
+      {\includegraphics[height=0.82cm]{KTH_logo_RGB_bla.png}};
+  \end{tikzpicture}%
+  \fi}
+
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox to\paperwidth{%
+    \hskip0.6cm\usebeamerfont{footline}%
+    {\color{kthblue}\bfseries DD2350 ADK}\hskip0.5em{\color{kthsky}|}\hskip0.5em
+    {\color{black!55}Övning 5\hskip0.5em{\color{kthsky}|}\hskip0.5em\insertsectionhead}%
+    \hfill{\color{kthblue}\bfseries\insertframenumber}\hskip0.6cm}%
+  \vskip0.2cm}
+
+% ======================================================================
+%  IKONER
+% ======================================================================
+% Kanin (kaninhål = fördjupning som går att hoppa över)
+\newcommand{\kaninikon}{\tikz[baseline=0pt,scale=0.125]{%
+  \fill[black!75] (0.1,0) ellipse (1.45 and 0.2);
+  \fill[bark] (0,0.9) ellipse (0.95 and 0.68);
+  \fill[bark] (0.88,1.42) circle (0.45);
+  \fill[bark,rotate around={-12:(0.8,1.78)}] (0.72,2.28) ellipse (0.14 and 0.52);
+  \fill[bark,rotate around={-38:(1.0,1.78)}] (1.12,2.25) ellipse (0.14 and 0.52);
+  \fill[white] (1.03,1.5) circle (0.08);
+  \fill[white] (-0.95,1.02) circle (0.24);}}
+\newcommand{\kh}{\kaninikon\ \textcolor{bark}{Kaninhål:}\ }
+% Varningstriangel
+\newcommand{\varningikon}{\tikz[baseline=-0.6ex,scale=0.28]{%
+  \fill[brick,rounded corners=0.4pt] (-0.62,-0.5) -- (0.62,-0.5) -- (0,0.6) -- cycle;
+  \node[white,font=\bfseries\tiny,inner sep=0] at (0,-0.08) {!};}}
+\newcommand{\ja}{\textcolor{kthgrass}{\ding{51}}}
+\newcommand{\nej}{\textcolor{brick}{\ding{55}}}
+
+% ======================================================================
+%  VARIATIONSTEORI
+% ======================================================================
+\newcommand{\vtag}[1]{\tikz[baseline=(t.base)]\node[fill=kthgreen,text=white,
+  rounded corners=2pt,inner sep=1.6pt,font=\scriptsize\bfseries](t){#1};}
+% \varstrip{Mönster}{Fast}{Varierar}{Urskiljs}
+\newcommand{\varstrip}[4]{%
+  \par\vfill
+  \begin{tcolorbox}[enhanced,halign=left,colback=kthmint!40,colframe=kthgreen,boxrule=0.5pt,
+     arc=2pt,left=4pt,right=4pt,top=1.5pt,bottom=1.5pt,fontupper=\scriptsize]
+  \vtag{#1}\ \textbf{Fast:} #2\enspace\textcolor{kthgreen}{$\cdot$}\enspace
+  \textbf{Varierar:} #3\enspace\textcolor{kthgreen}{$\cdot$}\enspace
+  \textbf{Urskiljs:} #4
+  \end{tcolorbox}}
+\newtcolorbox{missbox}[1][]{enhanced,halign=left,colback=coral!12,colframe=brick,boxrule=0.5pt,
+  arc=2pt,left=4pt,right=4pt,top=2pt,bottom=2pt,fontupper=\small,
+  before upper={\varningikon\ \textbf{\textcolor{brick}{Missuppfattning:}}\ },#1}
+\newtcolorbox{ahabox}[1][]{enhanced,halign=left,colback=lampyellow!22,colframe=kthorange,boxrule=0.5pt,
+  arc=2pt,left=4pt,right=4pt,top=2pt,bottom=2pt,fontupper=\small,#1}
+\newtcolorbox{infobox}[1][]{enhanced,halign=left,colback=kthlight!60,colframe=kthblue,boxrule=0.5pt,
+  arc=2pt,left=4pt,right=4pt,top=2pt,bottom=2pt,fontupper=\small,#1}
+\newtcolorbox{kaninbox}[1][]{enhanced,halign=left,colback=white,colframe=bark,boxrule=0.5pt,
+  arc=2pt,left=4pt,right=4pt,top=2pt,bottom=2pt,fontupper=\small,#1}
+
+% Kaninhålsbilder: omslut ramen med {\kaninbg ... }
+\newcommand{\kaninbg}{\setbeamercolor{background canvas}{bg=sand!65}}
+
+% Avsnittsbild med lärandeobjekt och kritiska aspekter
+\newcommand{\uppgiftsbild}[4]{%
+\begin{frame}
+  \vskip0.5cm
+  \begin{columns}[T]
+  \begin{column}{0.2\textwidth}
+    \raggedleft{\fontsize{70}{70}\selectfont\bfseries\color{kthsky}#1}
+  \end{column}
+  \begin{column}{0.74\textwidth}
+    {\Large\bfseries\color{kthnavy}#2}\par\vskip0.35cm
+    {\small\textbf{\color{kthgreen}Lärandeobjekt:} #3}\par\vskip0.25cm
+    {\small\textbf{\color{kthgreen}Kritiska aspekter} (det vi kommer att variera):}
+    \small #4
+  \end{column}
+  \end{columns}
+\end{frame}}
+
+% ======================================================================
+%  TIKZ
+% ======================================================================
+\tikzset{
+  onslide/.code args={<#1>#2}{\only<#1>{\pgfkeysalso{#2}}},
+  alt/.code args={<#1>#2#3}{\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}},
+  invisible/.style={opacity=0,text opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  >={Stealth[length=2.2mm,width=1.8mm]},
+  % grafer
+  gv/.style={circle,draw=kthnavy,fill=white,line width=0.7pt,inner sep=0pt,
+             minimum size=5.4mm,font=\small},
+  ge/.style={draw=black!45,line width=0.8pt,nodes={text=black!75}},
+  gw/.style={font=\scriptsize,inner sep=1pt},
+  mst/.style={draw=kthblue,line width=2.6pt,nodes={text=kthblue,font=\scriptsize\bfseries}},
+  nyss/.style={draw=kthorange,line width=3pt,nodes={text=kthorange,font=\scriptsize\bfseries}},
+  rej/.style={draw=brick!60,line width=0.9pt,dash pattern=on 2.5pt off 1.5pt,nodes={text=brick!70}},
+  rejnu/.style={draw=brick,line width=2pt,dash pattern=on 3pt off 1.5pt,nodes={text=brick,font=\scriptsize\bfseries}},
+  cand/.style={draw=kthorange,line width=1.5pt,dash pattern=on 3pt off 1.5pt,nodes={text=kthorange,font=\scriptsize\bfseries}},
+  faint/.style={draw=black!15,line width=0.6pt,nodes={text=black!35}},
+  intree/.style={fill=kthblue,text=white,draw=kthnavy},
+  comp1/.style={fill=kthmint,draw=kthgreen},
+  comp2/.style={fill=kthlight,draw=kthblue},
+  comp3/.style={fill=lampyellow!45,draw=kthorange},
+  % flöden
+  fn/.style={circle,draw=kthnavy,fill=white,line width=0.7pt,inner sep=0pt,
+             minimum size=5.4mm,font=\small},
+  fe/.style={->,draw=black!55,line width=0.8pt},
+  fl/.style={font=\scriptsize,inner sep=1pt,fill=white,text=black!85,
+             rounded corners=1pt},
+  res/.style={->,draw=kthblue,line width=0.8pt},
+  resb/.style={->,draw=kthorange,line width=0.8pt},
+  aug/.style={->,draw=kthgrass,line width=2.4pt},
+  sat/.style={->,draw=brick,line width=1.4pt},
+  cutline/.style={draw=plum,line width=1.2pt,dash pattern=on 4pt off 2pt},
+}
+
+% ======================================================================
+%  PSEUDOKOD PÅ SVENSKA
+% ======================================================================
+\algrenewcommand\algorithmicwhile{\textbf{medan}}
+\algrenewcommand\algorithmicdo{\textbf{gör}}
+\algrenewcommand\algorithmicfor{\textbf{för}}
+\algrenewcommand\algorithmicforall{\textbf{för alla}}
+\algrenewcommand\algorithmicif{\textbf{om}}
+\algrenewcommand\algorithmicthen{\textbf{så}}
+\algrenewcommand\algorithmicelse{\textbf{annars}}
+\algrenewcommand\algorithmicreturn{\textbf{returnera}}
+\algrenewcommand\algorithmicprocedure{\textbf{procedur}}
+\algrenewcommand\algorithmicfunction{\textbf{funktion}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill{\color{black!50}\(\triangleright\) #1}}
+\newcommand{\Kw}[1]{\textbf{#1}}
+
+% ======================================================================
+%  MATTE
+% ======================================================================
+\newcommand{\VE}{O(|V|+|E|)}
+\newcommand{\absV}{|V|}
+\newcommand{\absE}{|E|}
