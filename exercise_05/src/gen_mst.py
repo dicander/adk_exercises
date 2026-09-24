@@ -70,13 +70,15 @@ def nodes(vstyle=None, scale_font=None):
 
 
 def static_pic(estyle=None, vstyle=None, scale=0.8, labels=None, extra='', glow=None,
-               lab_style='gw', font=None):
-    """estyle: dict frozenset->style; labels: dict frozenset->text."""
+               lab_style='gw', font=None, under=''):
+    """estyle: dict frozenset->style; labels: dict frozenset->text; under: ritas under kanterna."""
     estyle = estyle or {}
     labels = labels or {}
     L = [f"\\begin{{tikzpicture}}[scale={scale}{(',every node/.append style={font=' + font + '}') if font else ''}]"]
     L.append(nodes(vstyle))
     L.append("  \\begin{scope}[on background layer]")
+    if under:
+        L.append(under)
     if glow:
         for (u, v) in glow:
             L.append(f"  \\draw[kthorange!55,line width=7pt,line cap=round] {edge_only_path(u, v)};")
@@ -500,15 +502,109 @@ def statics():
     sw[key('b', 'd')] = 'faint'
     sw[key('d', 'g')] = 'mst'
     write('swap.tex', static_pic(sw, None, scale=0.5, labels=sw_lab, font='\\footnotesize'))
-    # kvadrerade vikter: SPT ändras (b hänger på e)
+
+
+def extra_statics():
+    # Kruskal efter två kanter: kandidater = alla kanter mellan olika komponenter;
+    # snittet runt C = {b,e} används bara i beviset
+    ks = {k: 'cand' for k in W}
+    ks[key('a', 'c')] = 'mst'
+    ks[key('b', 'e')] = 'mst'
+    ks[key('e', 'h')] = 'nyss'
+    kv = {'a': 'comp1', 'c': 'comp1', 'b': 'comp2', 'e': 'comp2'}
+    under = ("  \\fill[plum!28,rotate around={-47.7:(2.6,3.65)}] (2.6,3.65) ellipse (1.35 and 0.62);")
+    extra = "  \\node[font=\\small\\bfseries,text=plum] at (2.2,2.95) {$S$};"
+    write('snitt-kruskal.tex', static_pic(ks, kv, scale=0.5, under=under, extra=extra,
+                                          font='\\footnotesize'))
+    # kontroll: kanterna över (C, V\C) är en delmängd av kandidaterna, och 3 är lättast av alla kandidater
+    C = {'b', 'e'}
+    cross = sorted(w for (u, v, w, _) in EDGES if (u in C) != (v in C))
+    cands = sorted(w for (u, v, w, _) in EDGES if w >= 3)
+    assert cross == [3, 5, 9, 10] and set(cross) <= set(cands) and min(cands) == 3
+    # w^2: MST oförändrat, kortaste-vägträdet ändras
     sq_lab = {k: str(w * w) for k, w in W.items()}
+    write('sq-mst.tex', static_pic({k: ('mst' if k in MST else 'faint') for k in W}, None,
+                                   scale=0.37, labels=sq_lab, font='\\footnotesize'))
     spt2 = {key(u, v) for u, v in [('a', 'c'), ('a', 'g'), ('e', 'b'), ('g', 'h'), ('g', 'd'),
                                    ('g', 'i'), ('h', 'e'), ('e', 'f')]}
     write('sq-spt.tex', static_pic({k: ('draw=plum,line width=2.6pt' if k in spt2 else 'faint') for k in W},
-                                   {'a': 'intree'}, scale=0.46, labels=sq_lab, font='\\footnotesize'))
+                                   {'a': 'intree'}, scale=0.37, labels=sq_lab, font='\\footnotesize'))
+    # kontroll: MST med kvadrerade vikter (Kruskal) och kortaste vägar (Dijkstra)
+    import heapq
+    def kruskal_set(wf):
+        par = {v: v for v in VERT}
+        def f(x):
+            while par[x] != x:
+                x = par[x]
+            return x
+        out = set()
+        for u, v, w, _ in sorted(EDGES, key=lambda e: wf(e[2])):
+            if f(u) != f(v):
+                par[f(u)] = f(v)
+                out.add(key(u, v))
+        return out
+    assert kruskal_set(lambda w: w * w) == MST == kruskal_set(lambda w: w)
+    def spt_set(wf):
+        adj = {v: [] for v in VERT}
+        for u, v, w, _ in EDGES:
+            adj[u].append((v, wf(w)))
+            adj[v].append((u, wf(w)))
+        d = {v: float('inf') for v in VERT}
+        d['a'] = 0
+        par = {}
+        H = [(0, 'a')]
+        while H:
+            du, u = heapq.heappop(H)
+            if du > d[u]:
+                continue
+            for v, w in adj[u]:
+                if du + w < d[v]:
+                    d[v] = du + w
+                    par[v] = u
+                    heapq.heappush(H, (d[v], v))
+        return {key(v, p) for v, p in par.items()}, d
+    s2, d2 = spt_set(lambda w: w * w)
+    assert s2 == spt2 and d2['b'] == 78, d2
+
+    # Motexempel: Kruskal och Prim (från r) gör samma val i samma ordning
+    P2 = {'r': (0, 1.0), 'p': (1.4, 2.1), 'q': (2.9, 1.3), 's': (1.4, 0.0), 't': (2.9, -0.45)}
+    E2 = [('r', 'p', 1, 'above left'), ('p', 'q', 2, 'above right'), ('r', 's', 3, 'below left'),
+          ('s', 't', 4, 'below'), ('r', 'q', 5, 'above'), ('q', 't', 6, 'right'), ('s', 'q', 7, 'below right')]
+    def kr2():
+        par = {v: v for v in P2}
+        def f(x):
+            while par[x] != x:
+                x = par[x]
+            return x
+        out = []
+        for u, v, w, _ in sorted(E2, key=lambda e: e[2]):
+            if f(u) != f(v):
+                par[f(u)] = f(v)
+                out.append(w)
+        return out
+    def pr2(r):
+        T, out = {r}, []
+        while len(T) < len(P2):
+            c = min((w, u, v) for u, v, w, _ in E2 if (u in T) != (v in T))
+            out.append(c[0])
+            T |= {c[1], c[2]}
+        return out
+    assert kr2() == pr2('r') == [1, 2, 3, 4] and pr2('t') != kr2()
+    L = ["\\begin{tikzpicture}[scale=0.68,every node/.append style={font=\\footnotesize}]"]
+    for v, (x, y) in P2.items():
+        st = ',intree' if v == 'r' else ''
+        L.append(f"  \\node[gv{st}] ({v}) at ({x},{y}) {{${v}$}};")
+    L.append("  \\begin{scope}[on background layer]")
+    for u, v, w, pos in E2:
+        st = 'mst' if w <= 4 else 'ge'
+        L.append(f"  \\draw[{st}] ({u}) -- node[gw,{pos}] {{{w}}} ({v});")
+    L.append("  \\end{scope}")
+    L.append("\\end{tikzpicture}")
+    write('motexempel.tex', "\n".join(L))
 
 
 if __name__ == '__main__':
+    extra_statics()
     kruskal_frames()
     order = prim_frames()
     print('Prim order', order)

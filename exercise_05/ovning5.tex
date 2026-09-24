@@ -568,7 +568,7 @@ och ny förälder — och då är resultatet inte längre ett träd. (Just den b
   \draw[cand] (e) -- node[gw,above right]{10} (f);
   \end{scope}
 \end{tikzpicture}\par
-\footnotesize Kandidater: \emph{alla} kanter som återstår i listan.\\
+\footnotesize Kandidater: \emph{alla} kanter mellan olika komponenter — här alla som återstår.\\
 Väljer \textbf{2} ($b$--$e$) — långt bort. Krusk\textbf{AL}: glob\textbf{AL}.
 \end{column}
 \begin{column}{0.49\textwidth}
@@ -857,10 +857,67 @@ Den ingår i \emph{inget} MST.
 \end{columns}
 \vfill
 \begin{kaninbox}[fontupper=\footnotesize]
-\textbf{Kruskal:} kanten den tar är lättast över snittet (sin komponent, resten).
-\textbf{Prim:} kanten den tar är lättast över snittet (trädet, resten).
-Samma sats, två olika snitt. Därför är båda korrekta.
+Båda algoritmerna tar i varje steg en kant som är lättast över \emph{något} snitt som ingen vald
+kant korsar. Därför är båda korrekta. Men snittet spelar olika roll: för Prim \emph{är} det
+valregeln, för Kruskal finns det bara i beviset. Nästa bild.
 \end{kaninbox}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Snittet: valregel för Prim, bara bevis för Kruskal}
+\begin{columns}[T]
+\begin{column}{0.44\textwidth}
+\centering
+{\small\bfseries\color{kthblue}Kruskal efter två kanter}\par
+\begin{tikzpicture}[scale=0.5,every node/.append style={font=\footnotesize}]
+  \node[gv,comp1] (a) at (3.1,5.2) {$a$};
+  \node[gv,comp2] (b) at (2.1,4.2) {$b$};
+  \node[gv,comp1] (c) at (4.3,4.1) {$c$};
+  \node[gv] (d) at (1.0,3.1) {$d$};
+  \node[gv,comp2] (e) at (3.1,3.1) {$e$};
+  \node[gv] (f) at (4.7,2.1) {$f$};
+  \node[gv] (g) at (1.0,1.0) {$g$};
+  \node[gv] (h) at (3.1,1.0) {$h$};
+  \node[gv] (i) at (0.0,0.0) {$i$};
+  \begin{scope}[on background layer]
+  \fill[plum!28,rotate around={-47.7:(2.6,3.65)}] (2.6,3.65) ellipse (1.35 and 0.62);
+  \draw[mst] (a) -- node[gw,above right]{1} (c);
+  \draw[mst] (b) -- node[gw,above right]{2} (e);
+  \draw[nyss] (e) -- node[gw,left]{3} (h);
+  \draw[cand] (g) -- node[gw,below]{4} (h);
+  \draw[cand] (b) -- node[gw,above left]{5} (d);
+  \draw[cand] (d) -- node[gw,right]{6} (g);
+  \draw[cand] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. node[gw,left,pos=0.5]{7} (g);
+  \draw[cand] (g) -- node[gw,above left]{8} (i);
+  \draw[cand] (a) -- node[gw,above left]{9} (b);
+  \draw[cand] (e) -- node[gw,above right]{10} (f);
+  \end{scope}
+  \node[font=\small\bfseries,text=plum] at (2.2,2.95) {$S$};
+\end{tikzpicture}\par
+{\scriptsize\textcolor{kthorange}{streckat}: kandidater\quad \textcolor{plum}{$S$}: bara i beviset}
+\end{column}
+\begin{column}{0.53\textwidth}
+\footnotesize
+\textbf{Valet är globalt.} Kruskal jämför \emph{alla} kanter mellan olika komponenter, 3 till 10
+— också 4, 6, 7 och 8, som inte rör $b$ eller $e$. Den tar 3.\par\smallskip
+\textbf{Snittet kommer i efterhand.} Beviset väljer $S$ = ena ändens komponent, här $\{b,e\}$.
+Kanterna över $(S,V\setminus S)$ är 3, 5, 9 och 10. Alla går mellan olika komponenter, så alla var
+kandidater. Alltså är 3 lättast även över snittet.\par\smallskip
+Globalt lättast $\Rightarrow$ lättast över snittet. Inte tvärtom.
+\end{column}
+\end{columns}
+\vfill
+\footnotesize
+\renewcommand{\arraystretch}{1.05}
+\begin{tabularx}{\textwidth}{@{}p{0.12\textwidth}p{0.44\textwidth}X@{}}
+\toprule
+& \textbf{Vilken kant tas?} & \textbf{Snittet}\\
+\midrule
+Prim & lättast ut ur trädet & (trädet, resten): \emph{är} valregeln\\
+Kruskal & lättast av alla kanter mellan olika komponenter & ena ändens komponent: bara i beviset\\
+Borůvka & varje komponent tar sin lättaste kant ut & alla komponenters snitt, samtidigt\\
+\bottomrule
+\end{tabularx}
 \end{frame}}
 
 {\kaninbg
@@ -916,7 +973,7 @@ Kö & \textsc{ExtractMin} & \textsc{DecreaseKey} & Totalt\\
 osorterad array & $O(|V|)$ & $O(1)$ & $O(|V|^2)$\\
 binär heap & $O(\log|V|)$ & $O(\log|V|)$ & $O(|E|\log|V|)$\\
 Fibonacciheap & $O(\log|V|)$ am. & $O(1)$ am. & $O(|E|+|V|\log|V|)$\\
-”lat” heap med kanter & $O(\log|E|)$ & — (lägg in dubbletter) & $O(|E|\log|V|)$\\
+”lat” heap med kanter & $O(\log|E|)$ & — (dubbletter i stället) & $O(|E|\log|V|)$, se nästa bild\\
 \bottomrule
 \end{tabular}
 \vfill
@@ -935,6 +992,55 @@ Samma algoritm, olika datastruktur, olika ”bästa”.
 \end{column}
 \end{columns}
 \varstrip{Separation}{algoritmen (Prim)}{datastrukturen och tätheten}{att komplexitet hör till algoritm \emph{plus} datastruktur}
+\end{frame}}
+
+{\kaninbg
+\begin{frame}{\kh Lat heap: blir dubbletterna ett problem?}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+{\small\bfseries\color{kthnavy}PrimLat$(G,w,r)$}
+\footnotesize
+\begin{algorithmic}[1]
+\State $T\gets\{r\}$;\ $H\gets$ alla kanter $(r,x)$
+\While{$H\neq\emptyset$}
+  \State $(u,v)\gets\textsc{ExtractMin}(H)$
+  \If{$v\in T$}
+    \State släng den \Comment{inaktuell dubblett}
+  \Else
+    \State $T\gets T\cup\{v\}$; ta med $(u,v)$
+    \ForAll{$(v,x)\in E$ med $x\notin T$}
+      \State \textsc{Insert}$(H,(v,x))$
+    \EndFor
+  \EndIf
+\EndWhile
+\end{algorithmic}
+\end{column}
+\begin{column}{0.5\textwidth}
+\footnotesize
+\textbf{Ja,} i en fullständig graf ligger ett hörn i heapen en gång för varje granne som hann in
+i trädet före det: upp till $|V|-1$ gånger.\par\medskip
+\textbf{Men} varje kant läggs in högst en gång, när dess första ände kommer med i trädet. Heapen
+har aldrig fler än $|E|$ element.\par\medskip
+Alltså högst $|E|$ \textsc{Insert} och $|E|$ \textsc{ExtractMin}, var och en $O(\log|E|)$.
+Och $\log|E|\le\log|V|^2=2\log|V|$.
+\end{column}
+\end{columns}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+Totalt $O(|E|\log|V|)$, samma som med \textsc{DecreaseKey}. Dubbletterna kostar minne,
+$O(|E|)$ i stället för $O(|V|)$, och en konstant faktor. Inte asymptotisk tid.
+\end{ahabox}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{kaninbox}[fontupper=\footnotesize]
+\textbf{Olyckliga vikter} behövs i varianten som bara lägger in när nyckeln blir bättre:
+$w(i,j)=n(n-i)+j$ för $i<j$. Prim från 1 tar hörnen i ordning $1,2,\dots,n$, och varje nytt hörn
+förbättrar alla återstående nycklar. Också då: $|E|$ element.
+\end{kaninbox}
+\end{column}
+\end{columns}
 \end{frame}}
 
 {\kaninbg
@@ -1128,32 +1234,53 @@ MST minimerar \emph{summan över trädet}, inte avståndet från $a$.
 \varstrip{Kontrast}{graf, rot, köstruktur}{nyckeln: kantvikt eller avstånd}{vad som minimeras}
 \end{frame}
 
-\begin{frame}{Vad beror MST på? Ändra vikterna}
-\begin{columns}[T]
-\begin{column}{0.68\textwidth}
+\begin{frame}{Ändra vikterna: MST och kortaste-vägträd reagerar olika}
 \scriptsize
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}p{0.27\linewidth}p{0.13\linewidth}p{0.52\linewidth}@{}}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabularx}{\textwidth}{@{}p{0.24\textwidth}p{0.1\textwidth}X@{}}
 \toprule
-\textbf{Ändring} & \textbf{MST} & \textbf{Kortaste-vägträd från $a$}\\
+\textbf{Ändring} & \textcolor{kthblue}{\textbf{MST}} & \textcolor{plum}{\textbf{Kortaste-vägträd från $a$}} (förra bildens träd)\\
 \midrule
 $w\mapsto w^2$ & samma & \textbf{ändras}: $b$ nås nu via $e$ ($78<81$)\\
 $w\mapsto w-5$ & samma & \textbf{odefinierat}: fram och tillbaka på en negativ kant\\
 $w\mapsto w+c$ & samma & kan ändras: straffar stigar med många kanter\\
 byt $5\leftrightarrow6$ på $b$--$d$, $d$--$g$ & \textbf{ändras} & samma (här)\\
 \bottomrule
-\end{tabular}
-\medskip
-
-\small
-Varje \emph{strikt växande} funktion av vikterna ger samma MST.
-Kruskal tittar ju bara på den sorterade ordningen.
-\end{column}
-\begin{column}{0.29\textwidth}
+\end{tabularx}
+\smallskip
+\begin{columns}[T]
+\begin{column}{0.32\textwidth}
 \centering
-{\scriptsize\bfseries\color{plum}$w^2$: nytt kortaste-vägträd}\par
-% ---- gen/sq-spt.tex ----
-\begin{tikzpicture}[scale=0.46,every node/.append style={font=\footnotesize}]
+{\scriptsize\bfseries\color{kthblue}MST med vikterna $w^2$}\par
+\begin{tikzpicture}[scale=0.37,every node/.append style={font=\footnotesize}]
+  \node[gv] (a) at (3.1,5.2) {$a$};
+  \node[gv] (b) at (2.1,4.2) {$b$};
+  \node[gv] (c) at (4.3,4.1) {$c$};
+  \node[gv] (d) at (1.0,3.1) {$d$};
+  \node[gv] (e) at (3.1,3.1) {$e$};
+  \node[gv] (f) at (4.7,2.1) {$f$};
+  \node[gv] (g) at (1.0,1.0) {$g$};
+  \node[gv] (h) at (3.1,1.0) {$h$};
+  \node[gv] (i) at (0.0,0.0) {$i$};
+  \begin{scope}[on background layer]
+  \draw[mst] (a) -- node[gw,above right]{1} (c);
+  \draw[mst] (b) -- node[gw,above right]{4} (e);
+  \draw[mst] (e) -- node[gw,left]{9} (h);
+  \draw[mst] (g) -- node[gw,below]{16} (h);
+  \draw[mst] (b) -- node[gw,above left]{25} (d);
+  \draw[faint] (d) -- node[gw,right]{36} (g);
+  \draw[mst] (a) .. controls (-0.2,5.4) and (-0.4,1.3) .. node[gw,left,pos=0.5]{49} (g);
+  \draw[mst] (g) -- node[gw,above left]{64} (i);
+  \draw[faint] (a) -- node[gw,above left]{81} (b);
+  \draw[mst] (e) -- node[gw,above right]{100} (f);
+  \end{scope}
+\end{tikzpicture}\par
+{\scriptsize\color{kthblue}Samma kanter som förut.}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+{\scriptsize\bfseries\color{plum}Kortaste-vägträd från $a$, vikterna $w^2$}\par
+\begin{tikzpicture}[scale=0.37,every node/.append style={font=\footnotesize}]
   \node[gv,intree] (a) at (3.1,5.2) {$a$};
   \node[gv] (b) at (2.1,4.2) {$b$};
   \node[gv] (c) at (4.3,4.1) {$c$};
@@ -1175,11 +1302,16 @@ Kruskal tittar ju bara på den sorterade ordningen.
   \draw[faint] (a) -- node[gw,above left]{81} (b);
   \draw[draw=plum,line width=2.6pt] (e) -- node[gw,above right]{100} (f);
   \end{scope}
-\end{tikzpicture}
-
+\end{tikzpicture}\par
+{\scriptsize\color{plum}\textbf{Inte} ett MST. Nytt: $b$ hänger på $e$.}
+\end{column}
+\begin{column}{0.32\textwidth}
+\footnotesize
+Strikt växande funktion av vikterna $\Rightarrow$ samma MST: Kruskal ser bara ordningen.\par\smallskip
+Kortaste vägar jämför \emph{summor}: $7+4+3+2=16>9$, men $7^2+4^2+3^2+2^2=78<81=9^2$.
 \end{column}
 \end{columns}
-\varstrip{Separation}{grafen}{vikterna}{MST beror på ordningen, kortaste väg på summorna}
+\varstrip{Separation}{grafen, ändringen}{vilket träd}{MST följer ordningen, kortaste väg summorna}
 \end{frame}
 
 \begin{frame}{Är MST unikt?}
@@ -1259,7 +1391,7 @@ Kruskal tittar ju bara på den sorterade ordningen.
 \varstrip{Generalisering}{algoritmerna}{vikterna, från unika till lika}{”minimalt” betyder minsta vikt, inte ett visst träd}
 \end{frame}
 
-\begin{frame}{Mitt i körningen: skog eller träd?}
+\begin{frame}{Mitt i körningen: går det att se vilken algoritm det är?}
 \begin{columns}[T]
 \begin{column}{0.33\textwidth}
 \centering
@@ -1287,7 +1419,8 @@ Kruskal tittar ju bara på den sorterade ordningen.
   \draw[ge] (e) -- node[gw,above right]{10} (f);
   \end{scope}
 \end{tikzpicture}\par
-\footnotesize En \emph{skog}: $\{a,c\}$ och $\{b,e,g,h\}$ (och tre ensamma hörn).
+\footnotesize Två träd med kanter, $\{a,c\}$ och $\{b,e,g,h\}$. Prim har alltid \emph{ett}:
+inte Prim.
 \end{column}
 \begin{column}{0.33\textwidth}
 \centering
@@ -1315,16 +1448,76 @@ Kruskal tittar ju bara på den sorterade ordningen.
   \draw[ge] (e) -- node[gw,above right]{10} (f);
   \end{scope}
 \end{tikzpicture}\par
-\footnotesize Ett \emph{träd}: $\{a,c,g,h,e\}$.
+\footnotesize Ett träd med 7 men utan 2. Kruskal tar de lättaste kanterna som inte sluter en
+cykel, och 2 sluter ingen: inte Kruskal.
 \end{column}
 \begin{column}{0.3\textwidth}
 \footnotesize
 \textbf{Gemensam invariant:} de valda kanterna är en delmängd av något MST.\par\smallskip
-Invarianten är samma. Formen är olika. En tentafråga som visar ett mellantillstånd
-avslöjar direkt vilken algoritm som körts.
+Här går det att se skillnad — av två \emph{olika} skäl. Flera träd avslöjar Kruskal. En
+överhoppad billig kant avslöjar Prim.\par\smallskip
+Att det \emph{alltid} går vore för starkt. Nästa bild.
 \end{column}
 \end{columns}
-\varstrip{Kontrast}{grafen, antal kanter}{algoritmen}{skog (Kruskal) mot sammanhängande träd (Prim)}
+\varstrip{Kontrast}{grafen, antal kanter}{algoritmen}{flera träd, eller en överhoppad billig kant}
+\end{frame}
+
+\begin{frame}{Motexempel: Kruskal och Prim gör exakt samma sak}
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\centering
+% ---- gen/motexempel.tex ----
+\begin{tikzpicture}[scale=0.68,every node/.append style={font=\footnotesize}]
+  \node[gv,intree] (r) at (0,1.0) {$r$};
+  \node[gv] (p) at (1.4,2.1) {$p$};
+  \node[gv] (q) at (2.9,1.3) {$q$};
+  \node[gv] (s) at (1.4,0.0) {$s$};
+  \node[gv] (t) at (2.9,-0.45) {$t$};
+  \begin{scope}[on background layer]
+  \draw[mst] (r) -- node[gw,above left] {1} (p);
+  \draw[mst] (p) -- node[gw,above right] {2} (q);
+  \draw[mst] (r) -- node[gw,below left] {3} (s);
+  \draw[mst] (s) -- node[gw,below] {4} (t);
+  \draw[ge] (r) -- node[gw,above] {5} (q);
+  \draw[ge] (q) -- node[gw,right] {6} (t);
+  \draw[ge] (s) -- node[gw,below right] {7} (q);
+  \end{scope}
+\end{tikzpicture}
+
+\end{column}
+\begin{column}{0.57\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Steg & Kruskal & Prim från $r$\\
+\midrule
+1 & $r$--$p$ (1) & $r$--$p$ (1)\\
+2 & $p$--$q$ (2) & $p$--$q$ (2)\\
+3 & $r$--$s$ (3) & $r$--$s$ (3)\\
+4 & $s$--$t$ (4) & $s$--$t$ (4)\\
+\bottomrule
+\end{tabular}\par\smallskip
+5, 6 och 7 sluter cykler. Samma tillstånd efter varje steg: Kruskals ”skog” är hela tiden
+ett enda träd.
+\end{column}
+\end{columns}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.4\textwidth}
+\begin{ahabox}[fontupper=\footnotesize]
+\textbf{Flera träd} med kanter $\Rightarrow$ inte Prim. \textbf{Ett träd} $\Rightarrow$ kan vara
+båda. (Prim från $t$ börjar med 4.)
+\end{ahabox}
+\end{column}
+\begin{column}{0.57\textwidth}
+\begin{missbox}[fontupper=\footnotesize]
+”Skog = Kruskal, träd = Prim.” En skog kan vara ett enda träd — precis när Kruskals nästa kant
+hela tiden sitter i trädet runt startpunkten.
+\end{missbox}
+\end{column}
+\end{columns}
+\varstrip{Separation}{algoritmerna}{grafen}{Prim ger alltid ett träd; Kruskal ibland också}
 \end{frame}
 
 % ---- s2-flow.tex ----

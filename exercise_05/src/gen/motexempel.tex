@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.68,every node/.append style={font=\footnotesize}]
+  \node[gv,intree] (r) at (0,1.0) {$r$};
+  \node[gv] (p) at (1.4,2.1) {$p$};
+  \node[gv] (q) at (2.9,1.3) {$q$};
+  \node[gv] (s) at (1.4,0.0) {$s$};
+  \node[gv] (t) at (2.9,-0.45) {$t$};
+  \begin{scope}[on background layer]
+  \draw[mst] (r) -- node[gw,above left] {1} (p);
+  \draw[mst] (p) -- node[gw,above right] {2} (q);
+  \draw[mst] (r) -- node[gw,below left] {3} (s);
+  \draw[mst] (s) -- node[gw,below] {4} (t);
+  \draw[ge] (r) -- node[gw,above] {5} (q);
+  \draw[ge] (q) -- node[gw,right] {6} (t);
+  \draw[ge] (s) -- node[gw,below right] {7} (q);
+  \end{scope}
+\end{tikzpicture}
